@@ -155,7 +155,9 @@
                 [self __showAd:YES];
             }
 
-            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:status];
+            NSString* statusString = [NSString stringWithFormat:@"%i", status];
+
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:statusString];
             [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
       }];
     } else {
@@ -180,7 +182,7 @@
             [self __showAd:YES];
         }
 
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:"3"];
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"3"];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
     }
 }
