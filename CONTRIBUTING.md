@@ -3,7 +3,7 @@
 I want to make contributing to this project as easy and transparent as
 possible. Hopefully this document makes the process for contributing clear and
 answers any questions you may have. If not, feel free to open an
-[Issue](https://github.com/ratson/cordova-plugin-admob-tomitank/issues).
+[Issue](https://github.com/tomitank/cordova-plugin-admob-tomitank/issues).
 
 
 ## Issues
@@ -66,7 +66,7 @@ After this, you can open `gh-pages/index.html` in your browser.
 Add git remote, call it `upstream`:
 
 ```sh
-git remote add upstream https://github.com/ratson/cordova-plugin-admob-tomitank.git
+git remote add upstream https://github.com/tomitank/cordova-plugin-admob-tomitank.git
 ```
 
 Each time you want to update, from your local `master` branch:
