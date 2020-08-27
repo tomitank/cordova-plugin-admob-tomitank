@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plugin xmlns:android="http://schemas.android.com/apk/res/android" id="cordova-plugin-admob-free"
+<plugin xmlns:android="http://schemas.android.com/apk/res/android" id="cordova-plugin-admob-tomitank"
     version="1.0.0" xmlns="http://apache.org/cordova/ns/plugins/1.0">
     <name>Cordova AdMob Plugin</name>
     <description>Robust, reliable and easy to use Cordova Admob plugin for Android and iOS
@@ -11,8 +11,8 @@
         money, monetization, iad, services, play, earn, publicity, advertisment, advertising,
         ads, ad, eclipse, android studio
     </keywords>
-    <repo>https://github.com/tomitank/cordova-plugin-admob-free.git</repo>
-    <issue>https://github.com/tomitank/cordova-plugin-admob-free/issues</issue>
+    <repo>https://github.com/tomitank/cordova-plugin-admob-tomitank.git</repo>
+    <issue>https://github.com/tomitank/cordova-plugin-admob-tomitank/issues</issue>
 
     <engines>
         <engine name="cordova" version=">=4.0" />
