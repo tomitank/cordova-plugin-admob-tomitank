@@ -1,12 +1,12 @@
 # Releases
 
-## Next
+## 1.1.1 (2020-08-27)
+
+* bigfux
 
 ## 1.1.0 (2020-08-27)
 
 * return TrackingAuthorization status
-
-## Next
 
 ## 1.0.0 (2020-08-27)
 
