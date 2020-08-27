@@ -3,7 +3,7 @@
 I want to make contributing to this project as easy and transparent as
 possible. Hopefully this document makes the process for contributing clear and
 answers any questions you may have. If not, feel free to open an
-[Issue](https://github.com/ratson/cordova-plugin-admob-free/issues).
+[Issue](https://github.com/ratson/cordova-plugin-admob-tomitank/issues).
 
 
 ## Issues
@@ -27,9 +27,9 @@ credit will always be given.
 2. Check out your fork
 
    ```sh
-   git clone git@github.com:yournamehere/cordova-plugin-admob-free.git
+   git clone git@github.com:yournamehere/cordova-plugin-admob-tomitank.git
 
-   cd cordova-plugin-admob-free
+   cd cordova-plugin-admob-tomitank
    ```
 
 3. Install all dependencies
@@ -66,7 +66,7 @@ After this, you can open `gh-pages/index.html` in your browser.
 Add git remote, call it `upstream`:
 
 ```sh
-git remote add upstream https://github.com/ratson/cordova-plugin-admob-free.git
+git remote add upstream https://github.com/ratson/cordova-plugin-admob-tomitank.git
 ```
 
 Each time you want to update, from your local `master` branch:
@@ -95,5 +95,5 @@ Please note that generated code is not committed as it increases the repository 
 
 ## License
 
-By contributing to `cordova-plugin-admob-free`, you agree that
+By contributing to `cordova-plugin-admob-tomitank`, you agree that
 your contributions will be licensed under its MIT license.

@@ -1,5 +1,5 @@
 {
-  "name": "cordova-plugin-admob-free",
+  "name": "cordova-plugin-admob-tomitank",
   "version": "1.0.0",
   "description": "Cordova AdMob Plugin for Google AdMob",
   "scripts": {
@@ -21,14 +21,14 @@
     "lint:spaces": "lintspaces -n -t -d spaces *.* src/**/*.* tests/**/*.* examples/*/*.* examples/*/www/*.*"
   },
   "cordova": {
-    "id": "cordova-plugin-admob-free",
+    "id": "cordova-plugin-admob-tomitank",
     "platforms": [
       "android",
       "ios"
     ]
   },
-  "homepage": "https://tomitank.github.io/cordova-plugin-admob-free/",
-  "repository": "tomitank/cordova-plugin-admob-free",
+  "homepage": "https://tomitank.github.io/cordova-plugin-admob-tomitank/",
+  "repository": "tomitank/cordova-plugin-admob-tomitank",
   "keywords": [
     "cordova",
     "admob",

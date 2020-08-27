@@ -2,9 +2,9 @@
 <widget id="hello.admob.mediation" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>AdMob Mediation</name>
     <description>
-        A sample cordova-plugin-admob-free application.
+        A sample cordova-plugin-admob-tomitank application.
     </description>
-    <author email="tomitank@users.noreply.github.com" href="https://github.com/tomitank/cordova-plugin-admob-free">
+    <author email="tomitank@users.noreply.github.com" href="https://github.com/tomitank/cordova-plugin-admob-tomitank">
         Ratson
     </author>
     <content src="index.html" />
@@ -25,6 +25,6 @@
     </platform>
     <engine name="android" spec="~6.1.0" />
     <engine name="ios" spec="~4.3.1" />
-    <plugin name="cordova-plugin-admob-free" spec="../.." />
+    <plugin name="cordova-plugin-admob-tomitank" spec="../.." />
     <plugin name="cordova-admob-inmobi" spec="~0.0.0" />
 </widget>
