@@ -131,7 +131,7 @@
 
 - (void)createBannerView:(CDVInvokedUrlCommand *)command {
     NSLog(@"createBannerView");
-    
+
     if (@available(iOS 14.0, *)) {
         [ATTrackingManager requestTrackingAuthorizationWithCompletionHandler:^(ATTrackingManagerAuthorizationStatus status) {
             CDVPluginResult *pluginResult;
@@ -155,7 +155,7 @@
                 [self __showAd:YES];
             }
 
-            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:status];
             [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
       }];
     } else {
@@ -180,7 +180,7 @@
             [self __showAd:YES];
         }
 
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:"3"];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
     }
 }
