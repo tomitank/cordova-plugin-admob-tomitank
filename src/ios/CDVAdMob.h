@@ -63,7 +63,6 @@
 @property (nonatomic, retain) NSString* forChild;
 
 - (void)setOptions:(CDVInvokedUrlCommand *)command;
-- (void)requestIDFA:(CDVInvokedUrlCommand *)command; // iOS 14 TrackingAuthorization
 
 - (void)createBannerView:(CDVInvokedUrlCommand *)command;
 - (void)destroyBannerView:(CDVInvokedUrlCommand *)command;
