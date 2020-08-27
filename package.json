@@ -1,6 +1,6 @@
 {
   "name": "cordova-plugin-admob-free",
-  "version": "0.27.0",
+  "version": "1.0.0",
   "description": "Cordova AdMob Plugin for Google AdMob",
   "scripts": {
     "prepublish": "run-s clean build",
@@ -27,8 +27,8 @@
       "ios"
     ]
   },
-  "homepage": "https://ratson.github.io/cordova-plugin-admob-free/",
-  "repository": "ratson/cordova-plugin-admob-free",
+  "homepage": "https://tomitank.github.io/cordova-plugin-admob-free/",
+  "repository": "tomitank/cordova-plugin-admob-free",
   "keywords": [
     "cordova",
     "admob",
@@ -42,7 +42,7 @@
     "admobpro"
   ],
   "tonicExampleFilename": "test.js",
-  "author": "Ratson",
+  "author": "tomitank",
   "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.4.5",
