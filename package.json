@@ -6,7 +6,7 @@
     "prepublish": "run-s clean build",
     "postpublish": "run-s docs",
     "pretest": "cross-env BABEL_ENV=test run-s build",
-    "test": "run-p test:* lint:*",
+    "test": "run-p test:*",
     "test:ios": "cordova-testbed --platform ios --plugin .",
     "test:js": "jest",
     "version": "sync-package-version --cordova-plugin",
