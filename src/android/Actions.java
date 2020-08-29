@@ -5,6 +5,8 @@ package name.ratson.cordova.admob;
  */
 final class Actions {
     static final String SET_OPTIONS = "setOptions";
+    static final String GET_TRACKING = "getTrackingStatus";
+    static final String TRACKING_FORM = "trackingStatusForm";
     static final String CREATE_BANNER = "createBannerView";
     static final String DESTROY_BANNER = "destroyBannerView";
     static final String REQUEST_AD = "requestAd";

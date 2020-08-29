@@ -22,6 +22,13 @@ test('setOptions() call correct native method', () => {
   ])
 })
 
+test('getTrackingStatus() call correct native method', () => {
+  admob.getTrackingStatus(options, success, error)
+  expect(mockFn).toBeCalledWith(success, error, 'AdMob', 'getTrackingStatus', [
+    options,
+  ])
+})
+
 describe('Banner', () => {
   it('prepare() call correct native method', () => {
     admob.banner.config(options)

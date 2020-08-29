@@ -82,6 +82,14 @@ public class AdMob extends CordovaPlugin {
             JSONObject options = inputs.optJSONObject(0);
             result = executeSetOptions(options, callbackContext);
 
+        } else if (Actions.GET_TRACKING.equals(action)) {
+            JSONObject options = inputs.optJSONObject(0);
+            result = getTrackingStatus(options, callbackContext);
+
+        } else if (Actions.TRACKING_FORM.equals(action)) {
+            JSONObject options = inputs.optJSONObject(0);
+            result = trackingStatusForm(options, callbackContext);
+
         } else if (Actions.CREATE_BANNER.equals(action)) {
             JSONObject options = inputs.optJSONObject(0);
             result = bannerExecutor.prepareAd(options, callbackContext);
@@ -143,6 +151,20 @@ public class AdMob extends CordovaPlugin {
         Log.w(TAG, "executeSetOptions");
 
         config.setOptions(options);
+
+        callbackContext.success();
+        return null;
+    }
+
+    private PluginResult getTrackingStatus(JSONObject options, CallbackContext callbackContext) {
+        Log.w(TAG, "getTrackingStatus");
+
+        callbackContext.success();
+        return null;
+    }
+
+    private PluginResult trackingStatusForm(JSONObject options, CallbackContext callbackContext) {
+        Log.w(TAG, "trackingStatusForm");
 
         callbackContext.success();
         return null;

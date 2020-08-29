@@ -159,6 +159,22 @@ export const AD_SIZE = Banner.sizes
 /**
  * @deprecated since version 0.6
  */
+export function getTrackingStatus(options, successCallback, failureCallback) {
+  exec(successCallback, failureCallback, 'AdMob', 'getTrackingStatus', [])
+}
+
+/* eslint-disable no-console */
+/**
+ * @deprecated since version 0.6
+ */
+export function trackingStatusForm(options, successCallback, failureCallback) {
+  exec(successCallback, failureCallback, 'AdMob', 'trackingStatusForm', [])
+}
+
+/* eslint-disable no-console */
+/**
+ * @deprecated since version 0.6
+ */
 export function createBannerView(
   options = {},
   successCallback,
