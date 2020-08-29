@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
     id="cordova-plugin-admob-tomitank-tests"
-    version="1.2.1-dev">
+    version="2.0.0-dev">
     <name>Cordova AdMob Tests</name>
     <license>MIT</license>
 
