@@ -134,7 +134,7 @@
     if (@available(iOS 14.0, *)) {
         NSString* statusString = [NSString stringWithFormat:@"%i", [ATTrackingManager trackingAuthorizationStatus]];
     } else {
-        NSString* statusString = [NSString stringWithFormat:@"%i", [ATTrackingManager trackingAuthorizationStatus authorized]];
+        NSString* statusString = [NSString stringWithFormat:@"%i", [ATTrackingManager trackingAuthorizationStatus:authorized]];
     }
 
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
@@ -162,7 +162,7 @@
         CDVPluginResult *pluginResult;
         NSString *callbackId = command.callbackId;
 
-        NSString* statusString = [NSString stringWithFormat:@"%i", [ATTrackingManager trackingAuthorizationStatus authorized]];
+        NSString* statusString = [NSString stringWithFormat:@"%i", [ATTrackingManager trackingAuthorizationStatus:authorized]];
 
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:statusString];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
