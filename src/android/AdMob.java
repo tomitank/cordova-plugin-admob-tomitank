@@ -160,14 +160,14 @@ public class AdMob extends CordovaPlugin {
         Log.w(TAG, "getTrackingStatus");
 
         callbackContext.success();
-        return null;
+        return "ok";
     }
 
     private PluginResult trackingStatusForm(JSONObject options, CallbackContext callbackContext) {
         Log.w(TAG, "trackingStatusForm");
 
         callbackContext.success();
-        return null;
+        return "ok";
     }
 
     public AdRequest buildAdRequest() {
