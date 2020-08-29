@@ -6,22 +6,11 @@ Created for iOS 14 AppTrackingTransparency. Based on https://github.com/ratson/c
 -------------------------------------------------------
 https://www.npmjs.com/package/cordova-plugin-admob-tomitank
 
-2.) Download the latest SDK (7.64.0):
--------------------------------------------------------
-https://developers.google.com/admob/ios/download
-
-Extract and copy the "GoogleMobileAds" file to /plugins/cordova-admob-sdk/src/ios/GoogleMobileAds.framework directory
-
-3.) Remove & add
--------------------------------------------------------
-```
-cordova platform rm ios
-cordova platform add ios
-```
- 4.) Build & ENJOY! 
+2.) Build & ENJOY!
  -------------------------------------------------------
 `cordova build ios`
 
+This plugin use cordova-plugin-admob-sdk-tomitank
 
 Drawbacks & Bugs:
 -------------------------------------------------------

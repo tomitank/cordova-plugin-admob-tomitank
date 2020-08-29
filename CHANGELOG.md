@@ -1,5 +1,9 @@
 # Releases
 
+## 1.2.0 (2020-08-29)
+
+* no more need copy and paste in sdk plugin
+
 ## 1.1.1 (2020-08-27)
 
 * bigfux
