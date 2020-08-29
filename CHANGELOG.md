@@ -1,6 +1,6 @@
 # Releases
 
-## 2.0.0 (2020-08-29)
+## 2.0.1 (2020-08-29)
 
 * add getTrackingStatus function
 * add trackingStatusForm function
