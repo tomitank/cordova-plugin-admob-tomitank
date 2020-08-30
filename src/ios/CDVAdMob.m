@@ -134,17 +134,25 @@
     if (@available(iOS 14.0, *)) {
 
         if ([ATTrackingManager trackingAuthorizationStatus] == ATTrackingManagerAuthorizationStatusNotDetermined) {
-            NSString* statusString = @"notDetermined";
-        } else if ([ATTrackingManager trackingAuthorizationStatus] == ATTrackingManagerAuthorizationStatusRestricted) {
-            NSString* statusString = @"restricted";
-        } else if ([ATTrackingManager trackingAuthorizationStatus] == ATTrackingManagerAuthorizationStatusDenied) {
-            NSString* statusString = @"denied";
-        } else {
-            NSString* statusString = @"authorized";
-        }
 
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:statusString];
-        [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"notDetermined"];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+
+        } else if ([ATTrackingManager trackingAuthorizationStatus] == ATTrackingManagerAuthorizationStatusRestricted) {
+
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"restricted"];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+
+        } else if ([ATTrackingManager trackingAuthorizationStatus] == ATTrackingManagerAuthorizationStatusDenied) {
+
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"denied"];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+
+        } else {
+
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"authorized"];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+        }
 
     } else {
 
@@ -164,17 +172,25 @@
             NSString *callbackId = command.callbackId;
 
             if (status == ATTrackingManagerAuthorizationStatusNotDetermined) {
-                NSString* statusString = @"notDetermined";
-            } else if (status == ATTrackingManagerAuthorizationStatusRestricted) {
-                NSString* statusString = @"restricted";
-            } else if (status == ATTrackingManagerAuthorizationStatusDenied) {
-                NSString* statusString = @"denied";
-            } else {
-                NSString* statusString = @"authorized";
-            }
 
-            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:statusString];
-            [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"notDetermined"];
+                [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+
+            } else if (status == ATTrackingManagerAuthorizationStatusRestricted) {
+
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"restricted"];
+                [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+
+            } else if (status == ATTrackingManagerAuthorizationStatusDenied) {
+
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"denied"];
+                [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+
+            } else {
+
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"authorized"];
+                [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+            }
       }];
 
     } else {
