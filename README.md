@@ -22,7 +22,7 @@ admob.getTrackingStatus().then(function(result) {
 });
 ```
 
-- all others function same as in https://github.com/ratson/cordova-plugin-admob-free
+- all others functions same as in https://github.com/ratson/cordova-plugin-admob-free
 
 Result:
 -------------------------------------------------------
