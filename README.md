@@ -19,7 +19,6 @@ admob.getTrackingStatus().then(function(result) {
         // admob.banner.prepare();
         // etc..
     });
-
 });
 ```
 
