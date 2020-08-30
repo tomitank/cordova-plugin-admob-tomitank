@@ -2,7 +2,7 @@
 
 Created for iOS 14 AppTrackingTransparency.
 
-This plugin use cordova-plugin-admob-sdk-tomitank
+This plugin use https://github.com/tomitank/cordova-plugin-admob-sdk-tomitank
 
 Based on https://github.com/ratson/cordova-plugin-admob-free
 
@@ -10,20 +10,24 @@ Usage:
 -------------------------------------------------------
 ```
 admob.getTrackingStatus().then(function(result) {
-    alert(status);
-});
 
-admob.trackingStatusForm().then(function(result) {
     alert(status);
-    // load + show ads..
-    // admob.banner.prepare();
-    // etc..
+
+    admob.trackingStatusForm().then(function(result) {
+        alert(status);
+        // load + show ads..
+        // admob.banner.prepare();
+        // etc..
+    });
+
 });
 ```
 
+- all others function same as in https://github.com/ratson/cordova-plugin-admob-free
+
 Result:
 -------------------------------------------------------
-This plugin return the AppTrackingTransparency status as string. So you can write extra notification for user.
+This plugin return the AppTrackingTransparency status name. So you can write extra notification for user.
 Info: https://developer.apple.com/documentation/apptrackingtransparency/attrackingmanager/authorizationstatus
 
 Support:

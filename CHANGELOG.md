@@ -1,5 +1,9 @@
 # Releases
 
+## 2.2.0 (2020-08-30)
+
+* return tracking status name instead of integer
+
 ## 2.1.0 (2020-08-29)
 
 * add getTrackingStatus function
