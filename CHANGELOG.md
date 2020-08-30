@@ -1,6 +1,6 @@
 # Releases
 
-## 2.2.1 (2020-08-30)
+## 2.2.2 (2020-08-30)
 
 * return tracking status name instead of integer
 
