@@ -1,4 +1,4 @@
-package name.ratson.cordova.admob.rewardvideo;
+package name.tomitank.cordova.admob.rewardvideo;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -13,8 +13,8 @@ import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.PluginResult;
 import org.json.JSONObject;
 
-import name.ratson.cordova.admob.AbstractExecutor;
-import name.ratson.cordova.admob.AdMob;
+import name.tomitank.cordova.admob.AbstractExecutor;
+import name.tomitank.cordova.admob.AdMob;
 
 public class RewardVideoExecutor extends AbstractExecutor {
     /**

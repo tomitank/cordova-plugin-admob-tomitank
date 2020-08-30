@@ -1,4 +1,4 @@
-package name.ratson.cordova.admob;
+package name.tomitank.cordova.admob;
 
 import org.json.JSONObject;
 

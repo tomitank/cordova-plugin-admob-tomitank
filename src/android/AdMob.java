@@ -1,4 +1,4 @@
-package name.ratson.cordova.admob;
+package name.tomitank.cordova.admob;
 
 import android.os.Bundle;
 import android.provider.Settings;
@@ -24,9 +24,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Iterator;
 
-import name.ratson.cordova.admob.banner.BannerExecutor;
-import name.ratson.cordova.admob.interstitial.InterstitialExecutor;
-import name.ratson.cordova.admob.rewardvideo.RewardVideoExecutor;
+import name.tomitank.cordova.admob.banner.BannerExecutor;
+import name.tomitank.cordova.admob.interstitial.InterstitialExecutor;
+import name.tomitank.cordova.admob.rewardvideo.RewardVideoExecutor;
 
 /**
  * This class represents the native implementation for the AdMob Cordova plugin.
@@ -83,12 +83,10 @@ public class AdMob extends CordovaPlugin {
             result = executeSetOptions(options, callbackContext);
 
         } else if (Actions.GET_TRACKING.equals(action)) {
-            JSONObject options = inputs.optJSONObject(0);
-            result = getTrackingStatus(options, callbackContext);
+            result = getTrackingStatus(callbackContext);
 
         } else if (Actions.TRACKING_FORM.equals(action)) {
-            JSONObject options = inputs.optJSONObject(0);
-            result = trackingStatusForm(options, callbackContext);
+            result = trackingStatusForm(callbackContext);
 
         } else if (Actions.CREATE_BANNER.equals(action)) {
             JSONObject options = inputs.optJSONObject(0);
@@ -156,18 +154,18 @@ public class AdMob extends CordovaPlugin {
         return null;
     }
 
-    private PluginResult getTrackingStatus(JSONObject options, CallbackContext callbackContext) {
+    private PluginResult getTrackingStatus(CallbackContext callbackContext) {
         Log.w(TAG, "getTrackingStatus");
 
-        callbackContext.success();
-        return "authorized";
+        callbackContext.success("authorized");
+        return null;
     }
 
-    private PluginResult trackingStatusForm(JSONObject options, CallbackContext callbackContext) {
+    private PluginResult trackingStatusForm(CallbackContext callbackContext) {
         Log.w(TAG, "trackingStatusForm");
 
-        callbackContext.success();
-        return "authorized";
+        callbackContext.success("authorized");
+        return null;
     }
 
     public AdRequest buildAdRequest() {
