@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin xmlns:android="http://schemas.android.com/apk/res/android" id="cordova-plugin-admob-tomitank"
-    version="2.2.5" xmlns="http://apache.org/cordova/ns/plugins/1.0">
+    version="2.2.6" xmlns="http://apache.org/cordova/ns/plugins/1.0">
     <name>Cordova AdMob Plugin</name>
     <description>Robust, reliable and easy to use Cordova Admob plugin for Android and iOS
         phone. Allows preloading and automatic loading of interstitials and banners plus more.
@@ -25,11 +25,9 @@
         <clobbers target="plugins.AdMob" />
     </js-module>
 
-    <dependency id="cordova-promise-polyfill" version="~0.0.2" />
-    <dependency id="cordova-admob-sdk-tomitank" version="*" />
-
     <platform name="android">
         <preference name="ADMOB_APP_ID" default=""/>
+        <preference name="PLAY_SERVICES_VERSION" default="16.0.+"/>
 
         <config-file parent="/manifest/application" target="AndroidManifest.xml">
             <activity android:name="com.google.android.gms.ads.AdActivity"
@@ -62,6 +60,8 @@
         <source-file src="src/android/AdMob.java" target-dir="src/name/tomitank/cordova/admob" />
         <source-file src="src/android/AdMobConfig.java" target-dir="src/name/tomitank/cordova/admob" />
         <source-file src="src/android/CordovaEventBuilder.java" target-dir="src/name/tomitank/cordova/admob" />
+
+        <framework src="com.google.android.gms:play-services-ads:$PLAY_SERVICES_VERSION" />
     </platform>
 
     <platform name="ios">
@@ -72,5 +72,13 @@
         </config-file>
         <header-file src="src/ios/CDVAdMob.h" />
         <source-file src="src/ios/CDVAdMob.m" />
+        <podspec>
+            <config>
+                <source url="https://cdn.cocoapods.org/"/>
+            </config>
+            <pods>
+                <pod name="Google-Mobile-Ads-SDK" spec="~> 7.64" />
+            </pods>
+        </podspec>
     </platform>
 </plugin>
