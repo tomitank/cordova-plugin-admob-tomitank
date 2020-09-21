@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin xmlns:android="http://schemas.android.com/apk/res/android" id="cordova-plugin-admob-tomitank"
-    version="2.2.9" xmlns="http://apache.org/cordova/ns/plugins/1.0">
+    version="2.3.0" xmlns="http://apache.org/cordova/ns/plugins/1.0">
     <name>Cordova AdMob Plugin</name>
     <description>Robust, reliable and easy to use Cordova Admob plugin for Android and iOS
         phone. Allows preloading and automatic loading of interstitials and banners plus more.
@@ -24,11 +24,16 @@
         <clobbers target="AdMob" />
         <clobbers target="plugins.AdMob" />
     </js-module>
-
+<!--
     <dependency id="cordova-promise-polyfill" version="~0.0.2" />
-
+    <dependency id="cordova-admob-sdk-tomitank" version="*" />
+    <dependency id="cordova-admob-ump-tomitank" version="*" />
+-->
     <platform name="android">
         <preference name="ADMOB_APP_ID" default=""/>
+        <!-- instead of cordova-admob-sdk-tomitank -->
+        <preference name="PLAY_SERVICES_VERSION" default="19.4.0"/>
+        <framework src="com.google.android.gms:play-services-ads:$PLAY_SERVICES_VERSION" />
 
         <config-file parent="/manifest/application" target="AndroidManifest.xml">
             <activity android:name="com.google.android.gms.ads.AdActivity"
@@ -49,18 +54,17 @@
             </feature>
         </config-file>
 
+        <source-file src="src/android/AdMob.java" target-dir="src/name/tomitank/cordova/admob" />
+        <source-file src="src/android/Actions.java" target-dir="src/name/tomitank/cordova/admob" />
+        <source-file src="src/android/AdMobConfig.java" target-dir="src/name/tomitank/cordova/admob" />
+        <source-file src="src/android/AbstractExecutor.java" target-dir="src/name/tomitank/cordova/admob" />
+        <source-file src="src/android/CordovaEventBuilder.java" target-dir="src/name/tomitank/cordova/admob" />
         <source-file src="src/android/banner/BannerExecutor.java" target-dir="src/name/tomitank/cordova/admob/banner" />
         <source-file src="src/android/banner/BannerListener.java" target-dir="src/name/tomitank/cordova/admob/banner" />
-        <source-file src="src/android/interstitial/InterstitialExecutor.java" target-dir="src/name/tomitank/cordova/admob/interstitial" />
-        <source-file src="src/android/interstitial/InterstitialListener.java" target-dir="src/name/tomitank/cordova/admob/interstitial" />
         <source-file src="src/android/rewardvideo/RewardVideoExecutor.java" target-dir="src/name/tomitank/cordova/admob/rewardvideo" />
         <source-file src="src/android/rewardvideo/RewardVideoListener.java" target-dir="src/name/tomitank/cordova/admob/rewardvideo" />
-
-        <source-file src="src/android/AbstractExecutor.java" target-dir="src/name/tomitank/cordova/admob" />
-        <source-file src="src/android/Actions.java" target-dir="src/name/tomitank/cordova/admob" />
-        <source-file src="src/android/AdMob.java" target-dir="src/name/tomitank/cordova/admob" />
-        <source-file src="src/android/AdMobConfig.java" target-dir="src/name/tomitank/cordova/admob" />
-        <source-file src="src/android/CordovaEventBuilder.java" target-dir="src/name/tomitank/cordova/admob" />
+        <source-file src="src/android/interstitial/InterstitialExecutor.java" target-dir="src/name/tomitank/cordova/admob/interstitial" />
+        <source-file src="src/android/interstitial/InterstitialListener.java" target-dir="src/name/tomitank/cordova/admob/interstitial" />
     </platform>
 
     <platform name="ios">
@@ -71,6 +75,7 @@
         </config-file>
         <header-file src="src/ios/CDVAdMob.h" />
         <source-file src="src/ios/CDVAdMob.m" />
+        <!-- instead of cordova-admob-sdk-tomitank -->
         <podspec>
             <config>
                 <source url="https://cdn.cocoapods.org/"/>
