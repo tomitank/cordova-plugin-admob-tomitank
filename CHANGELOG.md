@@ -1,5 +1,9 @@
 # Releases
 
+## 2.2.8 (2020-09-21)
+
+* try to add User Messaging Platform SDK
+
 ## 2.2.7 (2020-08-30)
 
 * return tracking status name instead of integer

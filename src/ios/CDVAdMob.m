@@ -1,9 +1,8 @@
-#import <AdSupport/ASIdentifierManager.h>
-#import <CommonCrypto/CommonDigest.h>
-
 #import "CDVAdMob.h"
-
+#import <CommonCrypto/CommonDigest.h>
 #import <GoogleMobileAds/GADExtras.h>
+#import <AdSupport/ASIdentifierManager.h>
+#include <UserMessagingPlatform/UserMessagingPlatform.h>
 
 @interface CDVAdMob()
 

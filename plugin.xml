@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin xmlns:android="http://schemas.android.com/apk/res/android" id="cordova-plugin-admob-tomitank"
-    version="2.2.7" xmlns="http://apache.org/cordova/ns/plugins/1.0">
+    version="2.2.8" xmlns="http://apache.org/cordova/ns/plugins/1.0">
     <name>Cordova AdMob Plugin</name>
     <description>Robust, reliable and easy to use Cordova Admob plugin for Android and iOS
         phone. Allows preloading and automatic loading of interstitials and banners plus more.
@@ -15,7 +15,7 @@
     <issue>https://github.com/tomitank/cordova-plugin-admob-tomitank/issues</issue>
 
     <engines>
-        <engine name="cordova" version=">=4.0" />
+        <engine name="cordova" version=">=9.0.0" />
     </engines>
 
     <js-module name="AdMob" src="www/admob.js">
@@ -27,6 +27,7 @@
 
     <dependency id="cordova-promise-polyfill" version="~0.0.2" />
     <dependency id="cordova-admob-sdk-tomitank" version="*" />
+    <dependency id="cordova-admob-ump-tomitank" version="*" />
 
     <platform name="android">
         <preference name="ADMOB_APP_ID" default=""/>
