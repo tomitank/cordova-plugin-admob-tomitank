@@ -37,7 +37,8 @@ admob.getTrackingStatus().then(function(result) {
 Result:
 -------------------------------------------------------
 User Messaging Platform:
-noSharedInstance, UMPerror, notAvailableStatus, formStatusNotAvailable, obtained, notObtained, keepTheForm
+Error callback: umpError, formError
+Success callback: noSharedInstance, formStatusNotAvailable, obtained, notObtained, keepTheForm
 AppTrackingTransparency:
 This plugin return the AppTrackingTransparency status name. So you can write extra notification for user.
 Info: https://developer.apple.com/documentation/apptrackingtransparency/attrackingmanager/authorizationstatus

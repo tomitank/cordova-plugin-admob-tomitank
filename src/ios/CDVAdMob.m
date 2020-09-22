@@ -130,9 +130,6 @@
 
 - (void) userMessagingPlatform:(CDVInvokedUrlCommand *)command {
 
-    CDVPluginResult *pluginResult;
-    NSString *callbackId = command.callbackId;
-
     // Create a UMPRequestParameters object.
     UMPRequestParameters *parameters = [[UMPRequestParameters alloc] init];
     // Set tag for under age of consent. Here NO means users are not under age.
@@ -141,18 +138,25 @@
 
     if (!UMPConsentInformation.sharedInstance) {
         NSLog(@"No shared instance");
+
+        CDVPluginResult *pluginResult;
+        NSString *callbackId = command.callbackId;
+
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"noSharedInstance"];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
     }
 
-    [UMPConsentInformation.sharedInstance
-        requestConsentInfoUpdateWithParameters:parameters
-            completionHandler:^(NSError* _Nullable error) {
+    [UMPConsentInformation.sharedInstance requestConsentInfoUpdateWithParameters:parameters completionHandler:^(NSError* _Nullable error) {
+        NSLog(@"sharedInstance");
+
+        CDVPluginResult *pluginResult;
+        NSString *callbackId = command.callbackId;
+
         // The consent information has updated.
         if (error) {
             // Handle the error.
             NSLog(@"UMP error %@", error);
-            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"UMPerror"];
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"umpError"];
             [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
         } else {
             // The consent information state was updated.
@@ -160,7 +164,7 @@
             NSLog(@"Proceed to form..");
             UMPFormStatus formStatus = UMPConsentInformation.sharedInstance.formStatus;
             if (formStatus == UMPFormStatusAvailable) {
-                NSLog(@"Loading form..");
+                NSLog(@"Call loadFormUMP");
                 [self loadFormUMP];
             } else {
                 NSLog(@"Form status is not available");
@@ -172,19 +176,27 @@
 }
 
 - (void) loadFormUMP:(CDVInvokedUrlCommand *)command {
-
-    CDVPluginResult *pluginResult;
-    NSString *callbackId = command.callbackId;
+    NSLog(@"Loading form..");
 
     [UMPConsentForm loadWithCompletionHandler:^(UMPConsentForm *form, NSError *loadError) {
+
+        CDVPluginResult *pluginResult;
+        NSString *callbackId = command.callbackId;
+
         if (loadError) {
             // Handle the error.
             NSLog(@"Form error %@", loadError);
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"formError"];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
         } else {
             // Present the form. You can also hold on to the reference to present later.
             NSLog(@"Presenting form..");
             if (UMPConsentInformation.sharedInstance.consentStatus == UMPConsentStatusRequired) {
                     [form presentFromViewController:self completionHandler:^(NSError *_Nullable dismissError) {
+
+                        CDVPluginResult *pluginResult;
+                        NSString *callbackId = command.callbackId;
+
                         if (UMPConsentInformation.sharedInstance.consentStatus == UMPConsentStatusObtained) {
                             // App can start requesting ads.
                             NSLog(@"Obtained");
