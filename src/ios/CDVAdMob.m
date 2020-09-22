@@ -1,8 +1,4 @@
 #import "CDVAdMob.h"
-#import <CommonCrypto/CommonDigest.h>
-#import <GoogleMobileAds/GADExtras.h>
-#import <AdSupport/ASIdentifierManager.h>
-#include <UserMessagingPlatform/UserMessagingPlatform.h>
 
 @interface CDVAdMob()
 
@@ -12,11 +8,12 @@
 - (BOOL) __showInterstitial:(BOOL)show;
 - (void) __showRewardedVideo:(BOOL)show;
 - (void) __setOptions:(NSDictionary*) options;
+- (void) __loadForm:(CDVInvokedUrlCommand*)command;
 
 - (GADRequest*) __buildAdRequest;
-- (NSString*) __md5: (NSString*) s;
-- (NSString *) __getAdMobDeviceId;
-- (GADAdSize) __AdSizeFromString:(NSString *)string;
+- (NSString *)  __getAdMobDeviceId;
+- (NSString*)   __md5: (NSString*) s;
+- (GADAdSize)   __AdSizeFromString:(NSString *)string;
 
 - (void) deviceOrientationChange:(NSNotification *)notification;
 - (void) fireEvent:(NSString *)obj event:(NSString *)eventName withData:(NSString *)jsonStr;
@@ -41,23 +38,22 @@
 
 @synthesize rewardedVideoLock, isRewardedVideoLoading;
 
-#define DEFAULT_BANNER_ID    @"ca-app-pub-3940256099942544/2934735716"
+#define DEFAULT_BANNER_ID       @"ca-app-pub-3940256099942544/2934735716"
 #define DEFAULT_INTERSTITIAL_ID @"ca-app-pub-3940256099942544/4411468910"
 #define DEFAULT_REWARD_VIDEO_ID @"ca-app-pub-3940256099942544/1712485313"
 
-#define OPT_PUBLISHER_ID    @"publisherId"
 #define OPT_INTERSTITIAL_ADID   @"interstitialAdId"
-#define OPT_REWARD_VIDEO_ID   @"rewardVideoId"
-#define OPT_AD_SIZE         @"adSize"
-#define OPT_BANNER_AT_TOP   @"bannerAtTop"
-#define OPT_OVERLAP         @"overlap"
-#define OPT_OFFSET_TOPBAR   @"offsetTopBar"
-#define OPT_IS_TESTING      @"isTesting"
-#define OPT_AD_EXTRAS       @"adExtras"
-#define OPT_AUTO_SHOW       @"autoShow"
-
-#define OPT_GENDER          @"gender"
-#define OPT_FORCHILD        @"forChild"
+#define OPT_REWARD_VIDEO_ID     @"rewardVideoId"
+#define OPT_OFFSET_TOPBAR       @"offsetTopBar"
+#define OPT_BANNER_AT_TOP       @"bannerAtTop"
+#define OPT_PUBLISHER_ID        @"publisherId"
+#define OPT_IS_TESTING          @"isTesting"
+#define OPT_AD_EXTRAS           @"adExtras"
+#define OPT_AUTO_SHOW           @"autoShow"
+#define OPT_FORCHILD            @"forChild"
+#define OPT_OVERLAP             @"overlap"
+#define OPT_AD_SIZE             @"adSize"
+#define OPT_GENDER              @"gender"
 
 #pragma mark Cordova JS bridge
 
@@ -124,7 +120,7 @@
 }
 
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-// User Messaging Platform SDK START (added by tomitank)
+// User Messaging Platform SDK (added by tomitank)
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 - (void) userMessagingPlatform:(CDVInvokedUrlCommand *)command {
@@ -164,50 +160,7 @@
             UMPFormStatus formStatus = UMPConsentInformation.sharedInstance.formStatus;
             if (formStatus == UMPFormStatusAvailable) {
                 NSLog(@"Loading form..");
-
-                // ####################################################################################
-
-                [UMPConsentForm loadWithCompletionHandler:^(UMPConsentForm *form, NSError *loadError) {
-
-                    CDVPluginResult *pluginResult;
-                    NSString *callbackId = command.callbackId;
-
-                    if (loadError) {
-                        // Handle the error.
-                        NSLog(@"Form error %@", loadError);
-                        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"formError"];
-                        [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
-                    } else {
-                        // Present the form. You can also hold on to the reference to present later.
-                        NSLog(@"Presenting form..");
-                        if (UMPConsentInformation.sharedInstance.consentStatus == UMPConsentStatusRequired) {
-                                [form presentFromViewController:self completionHandler:^(NSError *_Nullable dismissError) {
-
-                                    CDVPluginResult *pluginResult;
-                                    NSString *callbackId = command.callbackId;
-
-                                    if (UMPConsentInformation.sharedInstance.consentStatus == UMPConsentStatusObtained) {
-                                        // App can start requesting ads.
-                                        NSLog(@"Obtained");
-                                        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"obtained"];
-                                        [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
-                                    } else {
-                                        NSLog(@"Not obtained");
-                                        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"notObtained"];
-                                        [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
-                                    }
-                                }];
-                        } else {
-                            // Keep the form available for changes to user consent.
-                            NSLog(@"Keep the form available for changes to user consent.");
-                            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"keepTheForm"];
-                            [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
-                        }
-                    }
-                }];
-
-                // ####################################################################################
-
+                [self __loadForm:command];
             } else {
                 NSLog(@"Form status is not available");
                 pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"formStatusNotAvailable"];
@@ -217,12 +170,50 @@
     }];
 }
 
-// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-// User Messaging Platform SDK END (added by tomitank)
-// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+- (void) __loadForm:(CDVInvokedUrlCommand *)command {
+
+    [UMPConsentForm loadWithCompletionHandler:^(UMPConsentForm *form, NSError *loadError) {
+
+        CDVPluginResult *pluginResult;
+        NSString *callbackId = command.callbackId;
+
+        if (loadError) {
+            // Handle the error.
+            NSLog(@"Form error %@", loadError);
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"formError"];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+        } else {
+            // Present the form. You can also hold on to the reference to present later.
+            NSLog(@"Presenting form..");
+            if (UMPConsentInformation.sharedInstance.consentStatus == UMPConsentStatusRequired) {
+                    [form presentFromViewController:self.viewController completionHandler:^(NSError *_Nullable dismissError) {
+
+                        CDVPluginResult *pluginResult;
+                        NSString *callbackId = command.callbackId;
+
+                        if (UMPConsentInformation.sharedInstance.consentStatus == UMPConsentStatusObtained) {
+                            // App can start requesting ads.
+                            NSLog(@"Obtained");
+                            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"obtained"];
+                            [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+                        } else {
+                            NSLog(@"Not obtained");
+                            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"notObtained"];
+                            [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+                        }
+                    }];
+            } else {
+                // Keep the form available for changes to user consent.
+                NSLog(@"Keep the form available for changes to user consent.");
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"keepTheForm"];
+                [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+            }
+        }
+    }];
+}
 
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-// iOS 14 AppTrackingTransparency START (but we use the User Messaging Platform) (added by tomitank)
+// iOS 14 AppTrackingTransparency (Use the User Messaging Platform instead of this!) (added by tomitank)
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 - (void) getTrackingStatus:(CDVInvokedUrlCommand *)command {
@@ -304,7 +295,7 @@
 }
 
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-// iOS 14 AppTrackingTransparency END (added by tomitank)
+// base admob functions start here!
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 // The javascript from the AdMob plugin calls this when createBannerView is

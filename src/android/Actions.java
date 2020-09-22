@@ -5,6 +5,7 @@ package name.tomitank.cordova.admob;
  */
 final class Actions {
     static final String SET_OPTIONS = "setOptions";
+    static final String UMP_SDK_ANDROID = "userMessagingPlatform";
     static final String GET_TRACKING = "getTrackingStatus";
     static final String TRACKING_FORM = "trackingStatusForm";
     static final String CREATE_BANNER = "createBannerView";

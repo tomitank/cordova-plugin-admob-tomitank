@@ -9,25 +9,22 @@ Usage:
 Use with User Messaging Platform SDK (recommended)
 ```
 admob.userMessagingPlatform().then(function(result) {
-
-    alert(status);
-
+    alert(result);
+}).catch(function(error) {
+    alert(error);
+}).then(function() { // load ads in every case..
     // load + show ads..
-    // admob.banner.prepare();
-    // etc..
 });
 
 OR use directly with iOS 14 AppTrackingTransparency module:
 ```
 admob.getTrackingStatus().then(function(result) {
 
-    alert(status);
+    alert(result);
 
     admob.trackingStatusForm().then(function(result) {
-        alert(status);
+        alert(result);
         // load + show ads..
-        // admob.banner.prepare();
-        // etc..
     });
 });
 ```
