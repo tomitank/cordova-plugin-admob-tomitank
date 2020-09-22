@@ -1,6 +1,6 @@
 # Releases
 
-## 3.0.5 (2020-09-22)
+## 3.0.6 (2020-09-22)
 
 * to add User Messaging Platform SDK for iOS
 
