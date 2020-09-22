@@ -1,6 +1,6 @@
 {
   "name": "cordova-plugin-admob-tomitank",
-  "version": "2.3.3",
+  "version": "2.3.4",
   "description": "Cordova AdMob Plugin for Google AdMob",
   "scripts": {
     "prepublish": "run-s clean build",

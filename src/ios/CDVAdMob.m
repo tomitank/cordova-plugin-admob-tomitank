@@ -12,7 +12,6 @@
 - (BOOL) __showInterstitial:(BOOL)show;
 - (void) __showRewardedVideo:(BOOL)show;
 - (void) __setOptions:(NSDictionary*) options;
-- (void) __loadForm:(CDVInvokedUrlCommand *)command;
 
 - (GADRequest*) __buildAdRequest;
 - (NSString*) __md5: (NSString*) s;
@@ -164,54 +163,54 @@
             NSLog(@"Proceed to form..");
             UMPFormStatus formStatus = UMPConsentInformation.sharedInstance.formStatus;
             if (formStatus == UMPFormStatusAvailable) {
-                NSLog(@"Call loadForm");
-                [self __loadForm];
+                NSLog(@"Loading form..");
+
+                // ####################################################################################
+
+                [UMPConsentForm loadWithCompletionHandler:^(UMPConsentForm *form, NSError *loadError) {
+
+                    CDVPluginResult *pluginResult;
+                    NSString *callbackId = command.callbackId;
+
+                    if (loadError) {
+                        // Handle the error.
+                        NSLog(@"Form error %@", loadError);
+                        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"formError"];
+                        [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+                    } else {
+                        // Present the form. You can also hold on to the reference to present later.
+                        NSLog(@"Presenting form..");
+                        if (UMPConsentInformation.sharedInstance.consentStatus == UMPConsentStatusRequired) {
+                                [form presentFromViewController:self completionHandler:^(NSError *_Nullable dismissError) {
+
+                                    CDVPluginResult *pluginResult;
+                                    NSString *callbackId = command.callbackId;
+
+                                    if (UMPConsentInformation.sharedInstance.consentStatus == UMPConsentStatusObtained) {
+                                        // App can start requesting ads.
+                                        NSLog(@"Obtained");
+                                        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"obtained"];
+                                        [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+                                    } else {
+                                        NSLog(@"Not obtained");
+                                        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"notObtained"];
+                                        [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+                                    }
+                                }];
+                        } else {
+                            // Keep the form available for changes to user consent.
+                            NSLog(@"Keep the form available for changes to user consent.");
+                            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"keepTheForm"];
+                            [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+                        }
+                    }
+                }];
+
+                // ####################################################################################
+
             } else {
                 NSLog(@"Form status is not available");
                 pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"formStatusNotAvailable"];
-                [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
-            }
-        }
-    }];
-}
-
-- (void) __loadForm:(CDVInvokedUrlCommand *)command {
-    NSLog(@"Loading form..");
-
-    [UMPConsentForm loadWithCompletionHandler:^(UMPConsentForm *form, NSError *loadError) {
-
-        CDVPluginResult *pluginResult;
-        NSString *callbackId = command.callbackId;
-
-        if (loadError) {
-            // Handle the error.
-            NSLog(@"Form error %@", loadError);
-            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"formError"];
-            [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
-        } else {
-            // Present the form. You can also hold on to the reference to present later.
-            NSLog(@"Presenting form..");
-            if (UMPConsentInformation.sharedInstance.consentStatus == UMPConsentStatusRequired) {
-                    [form presentFromViewController:self completionHandler:^(NSError *_Nullable dismissError) {
-
-                        CDVPluginResult *pluginResult;
-                        NSString *callbackId = command.callbackId;
-
-                        if (UMPConsentInformation.sharedInstance.consentStatus == UMPConsentStatusObtained) {
-                            // App can start requesting ads.
-                            NSLog(@"Obtained");
-                            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"obtained"];
-                            [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
-                        } else {
-                            NSLog(@"Not obtained");
-                            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"notObtained"];
-                            [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
-                        }
-                    }];
-            } else {
-                // Keep the form available for changes to user consent.
-                NSLog(@"Keep the form available for changes to user consent.");
-                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"keepTheForm"];
                 [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
             }
         }
