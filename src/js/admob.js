@@ -159,13 +159,21 @@ export const AD_SIZE = Banner.sizes
 /**
  * @deprecated since version 0.6
  */
+export function userMessagingPlatform() {
+  return new Promise((resolve, reject) => {
+    exec(resolve, reject, 'AdMob', 'userMessagingPlatform', [])
+  })
+}
+
+/**
+ * @deprecated since version 0.6
+ */
 export function getTrackingStatus() {
   return new Promise((resolve, reject) => {
     exec(resolve, reject, 'AdMob', 'getTrackingStatus', [])
   })
 }
 
-/* eslint-disable no-console */
 /**
  * @deprecated since version 0.6
  */
@@ -175,7 +183,6 @@ export function trackingStatusForm() {
   })
 }
 
-/* eslint-disable no-console */
 /**
  * @deprecated since version 0.6
  */
