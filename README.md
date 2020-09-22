@@ -8,7 +8,7 @@ Based on https://github.com/ratson/cordova-plugin-admob-free
 
 Usage:
 -------------------------------------------------------
-Use the User Messaging Platform SDK (recommended)
+Use with User Messaging Platform SDK (recommended)
 ```
 admob.userMessagingPlatform().then(function(result) {
 
