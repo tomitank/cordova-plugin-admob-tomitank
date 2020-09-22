@@ -63,8 +63,10 @@
 @property (nonatomic, retain) NSString* forChild;
 
 - (void)setOptions:(CDVInvokedUrlCommand *)command;
+- (void)loadFormUMP:(CDVInvokedUrlCommand *)command;
 - (void)getTrackingStatus:(CDVInvokedUrlCommand *)command;
 - (void)trackingStatusForm:(CDVInvokedUrlCommand *)command;
+- (void)userMessagingPlatform:(CDVInvokedUrlCommand *)command;
 
 - (void)createBannerView:(CDVInvokedUrlCommand *)command;
 - (void)destroyBannerView:(CDVInvokedUrlCommand *)command;

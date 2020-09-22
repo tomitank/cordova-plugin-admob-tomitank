@@ -124,6 +124,96 @@
     [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
 }
 
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+// User Messaging Platform SDK START (added by tomitank)
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+- (void) userMessagingPlatform:(CDVInvokedUrlCommand *)command {
+
+    CDVPluginResult *pluginResult;
+    NSString *callbackId = command.callbackId;
+
+    // Create a UMPRequestParameters object.
+    UMPRequestParameters *parameters = [[UMPRequestParameters alloc] init];
+    // Set tag for under age of consent. Here NO means users are not under age.
+    parameters.tagForUnderAgeOfConsent = NO;
+    // Request an update to the consent information.
+
+    if (!UMPConsentInformation.sharedInstance) {
+        NSLog(@"No shared instance");
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"noSharedInstance"];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+    }
+
+    [UMPConsentInformation.sharedInstance
+        requestConsentInfoUpdateWithParameters:parameters
+            completionHandler:^(NSError* _Nullable error) {
+        // The consent information has updated.
+        if (error) {
+            // Handle the error.
+            NSLog(@"UMP error %@", error);
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"UMPerror"];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+        } else {
+            // The consent information state was updated.
+            // You are now ready to see if a form is available.
+            NSLog(@"Proceed to form..");
+            UMPFormStatus formStatus = UMPConsentInformation.sharedInstance.formStatus;
+            if (formStatus == UMPFormStatusAvailable) {
+                NSLog(@"Loading form..");
+                [self loadFormUMP];
+            } else {
+                NSLog(@"Form status is not available");
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"notAvailableStatus"];
+                [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+            }
+        }
+    }];
+}
+
+- (void) loadFormUMP:(CDVInvokedUrlCommand *)command {
+
+    CDVPluginResult *pluginResult;
+    NSString *callbackId = command.callbackId;
+
+    [UMPConsentForm loadWithCompletionHandler:^(UMPConsentForm *form, NSError *loadError) {
+        if (loadError) {
+            // Handle the error.
+            NSLog(@"Form error %@", loadError);
+        } else {
+            // Present the form. You can also hold on to the reference to present later.
+            NSLog(@"Presenting form..");
+            if (UMPConsentInformation.sharedInstance.consentStatus == UMPConsentStatusRequired) {
+                    [form presentFromViewController:self completionHandler:^(NSError *_Nullable dismissError) {
+                        if (UMPConsentInformation.sharedInstance.consentStatus == UMPConsentStatusObtained) {
+                            // App can start requesting ads.
+                            NSLog(@"Obtained");
+                            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"obtained"];
+                            [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+                        } else {
+                            NSLog(@"Not obtained");
+                            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"notObtained"];
+                            [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+                        }
+                    }];
+            } else {
+                // Keep the form available for changes to user consent.
+                NSLog(@"Keep the form available for changes to user consent.");
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"keepTheForm"];
+                [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+            }
+        }
+    }];
+}
+
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+// User Messaging Platform SDK END (added by tomitank)
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+// iOS 14 AppTrackingTransparency START (but we use the User Messaging Platform) (added by tomitank)
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
 - (void) getTrackingStatus:(CDVInvokedUrlCommand *)command {
     NSLog(@"getTrackingStatus");
 
@@ -201,6 +291,10 @@
         [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
     }
 }
+
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+// iOS 14 AppTrackingTransparency END (added by tomitank)
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 // The javascript from the AdMob plugin calls this when createBannerView is
 
@@ -790,7 +884,7 @@
 
         CGRect bf = self.bannerView.frame;
 
-        // If the ad is not showing or the ad is hidden, we don't want to resize anything.
+        // if the ad is not showing or the ad is hidden, we don't want to resize anything.
         UIView* parentView = self.bannerOverlap ? self.webView : [self.webView superview];
         BOOL adIsShowing = ([self.bannerView isDescendantOfView:parentView]) && (! self.bannerView.hidden);
 
@@ -815,7 +909,7 @@
                         bf.size.width = wf.size.width - parentView.safeAreaInsets.left - parentView.safeAreaInsets.right;
                         wf.size.height -= parentView.safeAreaInsets.top;
 
-                        //If safeAreBackground was turned turned off, turn it back on
+                        // if safeAreBackground was turned turned off, turn it back on
                         _safeAreaBackgroundView.hidden = false;
 
                         CGRect saf = _safeAreaBackgroundView.frame;
@@ -847,7 +941,7 @@
                         bf.size.width = wf.size.width - parentView.safeAreaInsets.left - parentView.safeAreaInsets.right;
                         wf.size.height -= parentView.safeAreaInsets.bottom;
 
-                        //If safeAreBackground was turned turned off, turn it back on
+                        // if safeAreBackground was turned turned off, turn it back on
                         _safeAreaBackgroundView.hidden = false;
 
                         CGRect saf = _safeAreaBackgroundView.frame;
@@ -869,11 +963,11 @@
 
             //NSLog(@"x,y,w,h = %d,%d,%d,%d", (int) bf.origin.x, (int) bf.origin.y, (int) bf.size.width, (int) bf.size.height );
         } else {
-            //Hide safe area background if visibile and banner ad does not exist
+            // Hide safe area background if visibile and banner ad does not exist
             _safeAreaBackgroundView.hidden = true;
         }
     } else {
-        //Hide safe area background if visibile and banner ad does not exist
+        // Hide safe area background if visibile and banner ad does not exist
         _safeAreaBackgroundView.hidden = true;
     }
 
