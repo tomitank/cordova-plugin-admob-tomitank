@@ -31,9 +31,9 @@
     UIView* _safeAreaBackgroundView;
 }
 
-@property(nonatomic, retain) GADBannerView *bannerView;
-@property(nonatomic, retain) GADInterstitial *interstitialView;
-@property(nonatomic, retain) GADRewardBasedVideoAd *rewardVideoView;
+@property (nonatomic, retain) GADBannerView *bannerView;
+@property (nonatomic, retain) GADInterstitial *interstitialView;
+@property (nonatomic, retain) GADRewardBasedVideoAd *rewardVideoView;
 
 @property (nonatomic, retain) NSString* publisherId;
 @property (nonatomic, retain) NSString* interstitialAdId;
@@ -62,24 +62,23 @@
 @property (nonatomic, retain) NSString* gender;
 @property (nonatomic, retain) NSString* forChild;
 
-- (void)setOptions:(CDVInvokedUrlCommand *)command;
-- (void)loadFormUMP:(CDVInvokedUrlCommand *)command;
-- (void)getTrackingStatus:(CDVInvokedUrlCommand *)command;
-- (void)trackingStatusForm:(CDVInvokedUrlCommand *)command;
-- (void)userMessagingPlatform:(CDVInvokedUrlCommand *)command;
+- (void) setOptions:(CDVInvokedUrlCommand *)command;
+- (void) getTrackingStatus:(CDVInvokedUrlCommand *)command;
+- (void) trackingStatusForm:(CDVInvokedUrlCommand *)command;
+- (void) userMessagingPlatform:(CDVInvokedUrlCommand *)command;
 
-- (void)createBannerView:(CDVInvokedUrlCommand *)command;
-- (void)destroyBannerView:(CDVInvokedUrlCommand *)command;
-- (void)requestAd:(CDVInvokedUrlCommand *)command;
-- (void)showAd:(CDVInvokedUrlCommand *)command;
+- (void) createBannerView:(CDVInvokedUrlCommand *)command;
+- (void) destroyBannerView:(CDVInvokedUrlCommand *)command;
+- (void) requestAd:(CDVInvokedUrlCommand *)command;
+- (void) showAd:(CDVInvokedUrlCommand *)command;
 
-- (void)createInterstitialView:(CDVInvokedUrlCommand *)command;
-- (void)requestInterstitialAd:(CDVInvokedUrlCommand *)command;
-- (void)showInterstitialAd:(CDVInvokedUrlCommand *)command;
-- (void)isInterstitialReady:(CDVInvokedUrlCommand *)command;
+- (void) createInterstitialView:(CDVInvokedUrlCommand *)command;
+- (void) requestInterstitialAd:(CDVInvokedUrlCommand *)command;
+- (void) showInterstitialAd:(CDVInvokedUrlCommand *)command;
+- (void) isInterstitialReady:(CDVInvokedUrlCommand *)command;
 
-- (void)createRewardVideo:(CDVInvokedUrlCommand *)command;
-- (void)showRewardVideo:(CDVInvokedUrlCommand *)command;
-- (void)isRewardVideoReady:(CDVInvokedUrlCommand *)command;
+- (void) createRewardVideo:(CDVInvokedUrlCommand *)command;
+- (void) showRewardVideo:(CDVInvokedUrlCommand *)command;
+- (void) isRewardVideoReady:(CDVInvokedUrlCommand *)command;
 
 @end

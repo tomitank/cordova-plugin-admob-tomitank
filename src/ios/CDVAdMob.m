@@ -6,20 +6,20 @@
 
 @interface CDVAdMob()
 
-- (void) __setOptions:(NSDictionary*) options;
+- (void) resizeViews;
 - (void) __createBanner;
 - (void) __showAd:(BOOL)show;
 - (BOOL) __showInterstitial:(BOOL)show;
 - (void) __showRewardedVideo:(BOOL)show;
+- (void) __setOptions:(NSDictionary*) options;
+- (void) __loadForm:(CDVInvokedUrlCommand *)command;
+
 - (GADRequest*) __buildAdRequest;
 - (NSString*) __md5: (NSString*) s;
 - (NSString *) __getAdMobDeviceId;
+- (GADAdSize) __AdSizeFromString:(NSString *)string;
 
-- (void)resizeViews;
-
-- (GADAdSize)__AdSizeFromString:(NSString *)string;
-
-- (void)deviceOrientationChange:(NSNotification *)notification;
+- (void) deviceOrientationChange:(NSNotification *)notification;
 - (void) fireEvent:(NSString *)obj event:(NSString *)eventName withData:(NSString *)jsonStr;
 
 @end
@@ -62,7 +62,7 @@
 
 #pragma mark Cordova JS bridge
 
-- (void)pluginInitialize {
+- (void) pluginInitialize {
     [super pluginInitialize];
     if (self) {
         // These notifications are required for re-placing the ad on orientation
@@ -164,8 +164,8 @@
             NSLog(@"Proceed to form..");
             UMPFormStatus formStatus = UMPConsentInformation.sharedInstance.formStatus;
             if (formStatus == UMPFormStatusAvailable) {
-                NSLog(@"Call loadFormUMP");
-                [self loadFormUMP];
+                NSLog(@"Call loadForm");
+                [self __loadForm];
             } else {
                 NSLog(@"Form status is not available");
                 pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"formStatusNotAvailable"];
@@ -175,7 +175,7 @@
     }];
 }
 
-- (void) loadFormUMP:(CDVInvokedUrlCommand *)command {
+- (void) __loadForm:(CDVInvokedUrlCommand *)command {
     NSLog(@"Loading form..");
 
     [UMPConsentForm loadWithCompletionHandler:^(UMPConsentForm *form, NSError *loadError) {
@@ -312,7 +312,7 @@
 
 // invoked. This method parses the arguments passed in.
 
-- (void)createBannerView:(CDVInvokedUrlCommand *)command {
+- (void) createBannerView:(CDVInvokedUrlCommand *)command {
     NSLog(@"createBannerView");
 
     CDVPluginResult *pluginResult;
@@ -340,7 +340,7 @@
     [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
 }
 
-- (void)destroyBannerView:(CDVInvokedUrlCommand *)command {
+- (void) destroyBannerView:(CDVInvokedUrlCommand *)command {
     NSLog(@"destroyBannerView");
 
     CDVPluginResult *pluginResult;
@@ -359,7 +359,7 @@
     [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
 }
 
-- (void)prepareInterstitial:(CDVInvokedUrlCommand *)command {
+- (void) prepareInterstitial:(CDVInvokedUrlCommand *)command {
     NSLog(@"prepareInterstitial");
 
     CDVPluginResult *pluginResult;
@@ -381,7 +381,7 @@
 
 }
 
-- (void)createInterstitialView:(CDVInvokedUrlCommand *)command {
+- (void) createInterstitialView:(CDVInvokedUrlCommand *)command {
     NSLog(@"createInterstitialView");
 
     CDVPluginResult *pluginResult;
@@ -401,7 +401,7 @@
     [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
 }
 
-- (void)showAd:(CDVInvokedUrlCommand *)command {
+- (void) showAd:(CDVInvokedUrlCommand *)command {
     NSLog(@"showAd");
 
     CDVPluginResult *pluginResult;
@@ -429,7 +429,7 @@
     [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
 }
 
-- (void)showInterstitialAd:(CDVInvokedUrlCommand *)command {
+- (void) showInterstitialAd:(CDVInvokedUrlCommand *)command {
     NSLog(@"showInterstitial");
 
     CDVPluginResult *pluginResult;
@@ -450,7 +450,7 @@
     [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
 }
 
-- (void)isInterstitialReady:(CDVInvokedUrlCommand *)command {
+- (void) isInterstitialReady:(CDVInvokedUrlCommand *)command {
     NSLog(@"isInterstitialReady");
 
     CDVPluginResult *pluginResult;
@@ -465,7 +465,7 @@
     [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
 }
 
-- (void)requestAd:(CDVInvokedUrlCommand *)command {
+- (void) requestAd:(CDVInvokedUrlCommand *)command {
     NSLog(@"requestAd");
 
     CDVPluginResult *pluginResult;
@@ -489,7 +489,7 @@
     [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
 }
 
-- (void)requestInterstitialAd:(CDVInvokedUrlCommand *)command {
+- (void) requestInterstitialAd:(CDVInvokedUrlCommand *)command {
     NSLog(@"requestInterstitialAd");
 
     CDVPluginResult *pluginResult;
@@ -513,7 +513,7 @@
     [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
 }
 
-- (void)createRewardVideo:(CDVInvokedUrlCommand *)command {
+- (void) createRewardVideo:(CDVInvokedUrlCommand *)command {
     NSLog(@"createRewardVideo");
 
     CDVPluginResult *pluginResult;
@@ -535,7 +535,7 @@
 }
 
 
-- (void)showRewardVideo:(CDVInvokedUrlCommand *)command {
+- (void) showRewardVideo:(CDVInvokedUrlCommand *)command {
     NSLog(@"showRewardVideo");
 
     CDVPluginResult *pluginResult;
@@ -554,7 +554,7 @@
 
 }
 
-- (void)isRewardVideoReady:(CDVInvokedUrlCommand *)command {
+- (void) isRewardVideoReady:(CDVInvokedUrlCommand *)command {
     NSLog(@"isRewardVideoReady");
 
     CDVPluginResult *pluginResult;
@@ -867,7 +867,7 @@
     }
 }
 
-- (void)resizeViews {
+- (void) resizeViews {
     // Frame of the main container view that holds the Cordova webview.
     CGRect pr = self.webView.superview.bounds, wf = pr;
     //NSLog(@"super view: %d x %d", (int)pr.size.width, (int)pr.size.height);
@@ -988,7 +988,7 @@
     //NSLog(@"superview: %d x %d, webview: %d x %d", (int) pr.size.width, (int) pr.size.height, (int) wf.size.width, (int) wf.size.height );
 }
 
-- (void)deviceOrientationChange:(NSNotification *)notification {
+- (void) deviceOrientationChange:(NSNotification *)notification {
     [self resizeViews];
 }
 
@@ -1006,7 +1006,7 @@
 
 #pragma mark GADBannerViewDelegate implementation
 
-- (void)adViewDidReceiveAd:(GADBannerView *)adView {
+- (void) adViewDidReceiveAd:(GADBannerView *)adView {
     if(self.bannerShow) {
         [self __showAd:YES];
     }
@@ -1015,44 +1015,44 @@
     [self fireEvent:@"" event:@"onReceiveAd" withData:nil];
 }
 
-- (void)adView:(GADBannerView *)view didFailToReceiveAdWithError:(GADRequestError *)error {
+- (void) adView:(GADBannerView *)view didFailToReceiveAdWithError:(GADRequestError *)error {
     NSString* jsonData = [NSString stringWithFormat:@"{ 'error': '%@', 'adType':'banner' }", [error localizedFailureReason]];
     [self fireEvent:@"" event:@"admob.banner.events.LOAD_FAIL" withData:jsonData];
     [self fireEvent:@"" event:@"onFailedToReceiveAd" withData:jsonData];
 }
 
-- (void)adViewWillLeaveApplication:(GADBannerView *)adView {
+- (void) adViewWillLeaveApplication:(GADBannerView *)adView {
     NSString* jsonData = @"{ 'adType':'banner' }";
     [self fireEvent:@"" event:@"admob.banner.events.EXIT_APP" withData:jsonData];
     [self fireEvent:@"" event:@"onLeaveToAd" withData:jsonData];
 }
 
-- (void)adViewWillPresentScreen:(GADBannerView *)adView {
+- (void) adViewWillPresentScreen:(GADBannerView *)adView {
     [self fireEvent:@"" event:@"admob.banner.events.OPEN" withData:nil];
     [self fireEvent:@"" event:@"onPresentAd" withData:nil];
 }
 
-- (void)adViewDidDismissScreen:(GADBannerView *)adView {
+- (void) adViewDidDismissScreen:(GADBannerView *)adView {
     [self fireEvent:@"" event:@"admob.banner.events.CLOSE" withData:nil];
     [self fireEvent:@"" event:@"onDismissAd" withData:nil];
 }
 
 #pragma mark GADInterstitialDelegate implementation
 
-- (void)interstitial:(GADInterstitial *)ad
+- (void) interstitial:(GADInterstitial *)ad
     didFailToReceiveAdWithError:(GADRequestError *)error {
     NSString* jsonData = [NSString stringWithFormat:@"{ 'error': '%@', 'adType':'interstitial' }", [error localizedFailureReason]];
     [self fireEvent:@"" event:@"admob.interstitial.events.LOAD_FAIL" withData:jsonData];
     [self fireEvent:@"" event:@"onFailedToReceiveAd" withData:jsonData];
 }
 
-- (void)interstitialWillLeaveApplication:(GADInterstitial *)interstitial {
+- (void) interstitialWillLeaveApplication:(GADInterstitial *)interstitial {
     NSString* jsonData = @"{ 'adType':'interstitial' }";
     [self fireEvent:@"" event:@"admob.interstitial.events.EXIT_APP" withData:jsonData];
     [self fireEvent:@"" event:@"onLeaveToAd" withData:jsonData];
 }
 
-- (void)interstitialDidReceiveAd:(GADInterstitial *)interstitial {
+- (void) interstitialDidReceiveAd:(GADInterstitial *)interstitial {
     [self fireEvent:@"" event:@"admob.interstitial.events.LOAD" withData:nil];
     [self fireEvent:@"" event:@"onReceiveInterstitialAd" withData:nil];
     if (self.interstitialView){
@@ -1062,13 +1062,13 @@
     }
 }
 
-- (void)interstitialWillPresentScreen:(GADInterstitial *)interstitial {
+- (void) interstitialWillPresentScreen:(GADInterstitial *)interstitial {
     [self fireEvent:@"" event:@"admob.interstitial.events.OPEN" withData:nil];
     [self fireEvent:@"" event:@"onPresentInterstitialAd" withData:nil];
 }
 
 
-- (void)interstitialDidDismissScreen:(GADInterstitial *)interstitial {
+- (void) interstitialDidDismissScreen:(GADInterstitial *)interstitial {
     [self fireEvent:@"" event:@"admob.interstitial.events.CLOSE" withData:nil];
     [self fireEvent:@"" event:@"onDismissInterstitialAd" withData:nil];
     if (self.interstitialView) {
@@ -1081,7 +1081,7 @@
 
 #pragma mark GADRewardBasedVideoAdDelegate implementation
 
-- (void)rewardBasedVideoAd:(GADRewardBasedVideoAd *)rewardBasedVideoAd
+- (void) rewardBasedVideoAd:(GADRewardBasedVideoAd *)rewardBasedVideoAd
    didRewardUserWithReward:(GADAdReward *)reward {
     NSString* obj = @"AdMob";
     NSString* jsonData = [NSString stringWithFormat:@"{'adNetwork':'%@','adType':'rewardvideo','adEvent':'onRewardedVideo','rewardType':'%@','rewardAmount':%lf}",
@@ -1089,7 +1089,7 @@
     [self fireEvent:@"" event:@"admob.rewardvideo.events.REWARD" withData:jsonData];
 }
 
-- (void)rewardBasedVideoAdDidReceiveAd:(GADRewardBasedVideoAd *)rewardBasedVideoAd {
+- (void) rewardBasedVideoAdDidReceiveAd:(GADRewardBasedVideoAd *)rewardBasedVideoAd {
     @synchronized(self.rewardedVideoLock) {
         self.isRewardedVideoLoading = false;
     }
@@ -1101,15 +1101,15 @@
     }
 }
 
-- (void)rewardBasedVideoAdDidOpen:(GADRewardBasedVideoAd *)rewardBasedVideoAd {
+- (void) rewardBasedVideoAdDidOpen:(GADRewardBasedVideoAd *)rewardBasedVideoAd {
     [self fireEvent:@"" event:@"admob.rewardvideo.events.OPEN" withData:nil];
 }
 
-- (void)rewardBasedVideoAdDidStartPlaying:(GADRewardBasedVideoAd *)rewardBasedVideoAd {
+- (void) rewardBasedVideoAdDidStartPlaying:(GADRewardBasedVideoAd *)rewardBasedVideoAd {
     [self fireEvent:@"" event:@"admob.rewardvideo.events.START" withData:nil];
 }
 
-- (void)rewardBasedVideoAdDidClose:(GADRewardBasedVideoAd *)rewardBasedVideoAd {
+- (void) rewardBasedVideoAdDidClose:(GADRewardBasedVideoAd *)rewardBasedVideoAd {
     [self fireEvent:@"" event:@"admob.rewardvideo.events.CLOSE" withData:nil];
     if (self.rewardVideoView) {
         self.rewardVideoView.delegate = nil;
@@ -1117,12 +1117,12 @@
     }
 }
 
-- (void)rewardBasedVideoAdWillLeaveApplication:(GADRewardBasedVideoAd *)rewardBasedVideoAd {
+- (void) rewardBasedVideoAdWillLeaveApplication:(GADRewardBasedVideoAd *)rewardBasedVideoAd {
     NSString* jsonData = @"{ 'adType':'rewardvideo' }";
     [self fireEvent:@"" event:@"admob.rewardvideo.events.EXIT_APP" withData:jsonData];
 }
 
-- (void)rewardBasedVideoAd:(GADRewardBasedVideoAd *)rewardBasedVideoAd
+- (void) rewardBasedVideoAd:(GADRewardBasedVideoAd *)rewardBasedVideoAd
     didFailToLoadWithError:(NSError *)error {
     @synchronized(self.rewardedVideoLock) {
         self.isRewardedVideoLoading = false;
@@ -1135,7 +1135,7 @@
 
 #pragma mark Cleanup
 
-- (void)dealloc {
+- (void) dealloc {
     [[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
     [[NSNotificationCenter defaultCenter]
      removeObserver:self
