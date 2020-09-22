@@ -2,9 +2,7 @@
 
 Created for iOS 14 AppTrackingTransparency.
 
-This plugin use https://github.com/tomitank/cordova-admob-sdk-tomitank
-
-Based on https://github.com/ratson/cordova-plugin-admob-free
+This plugin use cocoapods for iOS dependencies!
 
 Usage:
 -------------------------------------------------------
