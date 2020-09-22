@@ -8,6 +8,18 @@ Based on https://github.com/ratson/cordova-plugin-admob-free
 
 Usage:
 -------------------------------------------------------
+Use the User Messaging Platform SDK (recommended)
+```
+admob.userMessagingPlatform().then(function(result) {
+
+    alert(status);
+
+    // load + show ads..
+    // admob.banner.prepare();
+    // etc..
+});
+
+OR use directly with iOS 14 AppTrackingTransparency module:
 ```
 admob.getTrackingStatus().then(function(result) {
 
@@ -26,6 +38,9 @@ admob.getTrackingStatus().then(function(result) {
 
 Result:
 -------------------------------------------------------
+User Messaging Platform:
+noSharedInstance, UMPerror, notAvailableStatus, formStatusNotAvailable, obtained, notObtained, keepTheForm
+AppTrackingTransparency:
 This plugin return the AppTrackingTransparency status name. So you can write extra notification for user.
 Info: https://developer.apple.com/documentation/apptrackingtransparency/attrackingmanager/authorizationstatus
 

@@ -164,7 +164,7 @@
                 [self loadFormUMP];
             } else {
                 NSLog(@"Form status is not available");
-                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"notAvailableStatus"];
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"formStatusNotAvailable"];
                 [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
             }
         }

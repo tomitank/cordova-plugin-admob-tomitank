@@ -1,8 +1,8 @@
 # Releases
 
-## 2.3.0 (2020-09-21)
+## 2.3.1 (2020-09-21)
 
-* try to add User Messaging Platform SDK
+* to add User Messaging Platform SDK
 
 ## 2.2.7 (2020-08-30)
 
