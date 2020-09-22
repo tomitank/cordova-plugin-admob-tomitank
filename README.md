@@ -27,7 +27,6 @@ admob.userMessagingPlatform().then(function(result) {
 }).then(function() { // load ads in every case..
     // load + show ads..
 });
-
 ```
 
 - all others functions same as in https://github.com/ratson/cordova-plugin-admob-free
