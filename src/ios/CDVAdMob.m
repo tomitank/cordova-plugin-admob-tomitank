@@ -120,6 +120,88 @@
 }
 
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+// iOS 14 AppTrackingTransparency (Recommended: UMP is buggy! 2020.09.22) (added by tomitank)
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+- (void) getTrackingStatus:(CDVInvokedUrlCommand *)command {
+    NSLog(@"getTrackingStatus");
+
+    CDVPluginResult *pluginResult;
+    NSString *callbackId = command.callbackId;
+
+    if (@available(iOS 14.0, *)) {
+
+        if ([ATTrackingManager trackingAuthorizationStatus] == ATTrackingManagerAuthorizationStatusNotDetermined) {
+
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"notDetermined"];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+
+        } else if ([ATTrackingManager trackingAuthorizationStatus] == ATTrackingManagerAuthorizationStatusRestricted) {
+
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"restricted"];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+
+        } else if ([ATTrackingManager trackingAuthorizationStatus] == ATTrackingManagerAuthorizationStatusDenied) {
+
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"denied"];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+
+        } else {
+
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"authorized"];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+        }
+
+    } else {
+
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"authorized"];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+    }
+}
+
+- (void) trackingStatusForm:(CDVInvokedUrlCommand *)command {
+    NSLog(@"trackingStatusForm");
+
+    if (@available(iOS 14.0, *)) {
+
+        [ATTrackingManager requestTrackingAuthorizationWithCompletionHandler:^(ATTrackingManagerAuthorizationStatus status) {
+
+            CDVPluginResult *pluginResult;
+            NSString *callbackId = command.callbackId;
+
+            if (status == ATTrackingManagerAuthorizationStatusNotDetermined) {
+
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"notDetermined"];
+                [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+
+            } else if (status == ATTrackingManagerAuthorizationStatusRestricted) {
+
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"restricted"];
+                [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+
+            } else if (status == ATTrackingManagerAuthorizationStatusDenied) {
+
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"denied"];
+                [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+
+            } else {
+
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"authorized"];
+                [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+            }
+      }];
+
+    } else {
+
+        CDVPluginResult *pluginResult;
+        NSString *callbackId = command.callbackId;
+
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"authorized"];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+    }
+}
+
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 // User Messaging Platform SDK (added by tomitank)
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -210,88 +292,6 @@
             }
         }
     }];
-}
-
-// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-// iOS 14 AppTrackingTransparency (Use the User Messaging Platform instead of this!) (added by tomitank)
-// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
-- (void) getTrackingStatus:(CDVInvokedUrlCommand *)command {
-    NSLog(@"getTrackingStatus");
-
-    CDVPluginResult *pluginResult;
-    NSString *callbackId = command.callbackId;
-
-    if (@available(iOS 14.0, *)) {
-
-        if ([ATTrackingManager trackingAuthorizationStatus] == ATTrackingManagerAuthorizationStatusNotDetermined) {
-
-            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"notDetermined"];
-            [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
-
-        } else if ([ATTrackingManager trackingAuthorizationStatus] == ATTrackingManagerAuthorizationStatusRestricted) {
-
-            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"restricted"];
-            [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
-
-        } else if ([ATTrackingManager trackingAuthorizationStatus] == ATTrackingManagerAuthorizationStatusDenied) {
-
-            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"denied"];
-            [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
-
-        } else {
-
-            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"authorized"];
-            [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
-        }
-
-    } else {
-
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"authorized"];
-        [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
-    }
-}
-
-- (void) trackingStatusForm:(CDVInvokedUrlCommand *)command {
-    NSLog(@"trackingStatusForm");
-
-    if (@available(iOS 14.0, *)) {
-
-        [ATTrackingManager requestTrackingAuthorizationWithCompletionHandler:^(ATTrackingManagerAuthorizationStatus status) {
-
-            CDVPluginResult *pluginResult;
-            NSString *callbackId = command.callbackId;
-
-            if (status == ATTrackingManagerAuthorizationStatusNotDetermined) {
-
-                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"notDetermined"];
-                [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
-
-            } else if (status == ATTrackingManagerAuthorizationStatusRestricted) {
-
-                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"restricted"];
-                [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
-
-            } else if (status == ATTrackingManagerAuthorizationStatusDenied) {
-
-                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"denied"];
-                [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
-
-            } else {
-
-                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"authorized"];
-                [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
-            }
-      }];
-
-    } else {
-
-        CDVPluginResult *pluginResult;
-        NSString *callbackId = command.callbackId;
-
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"authorized"];
-        [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
-    }
 }
 
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>

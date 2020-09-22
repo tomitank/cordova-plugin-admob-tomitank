@@ -6,17 +6,7 @@ This plugin use cocoapods for iOS dependencies!
 
 Usage:
 -------------------------------------------------------
-Use with User Messaging Platform SDK (recommended)
-```
-admob.userMessagingPlatform().then(function(result) {
-    alert(result);
-}).catch(function(error) {
-    alert(error);
-}).then(function() { // load ads in every case..
-    // load + show ads..
-});
-
-OR use directly with iOS 14 AppTrackingTransparency module:
+Use directly with iOS 14 AppTrackingTransparency module (recommended)
 ```
 admob.getTrackingStatus().then(function(result) {
 
@@ -27,6 +17,17 @@ admob.getTrackingStatus().then(function(result) {
         // load + show ads..
     });
 });
+```
+OR Use with User Messaging Platform SDK (not recommended - 2020.09.22)
+```
+admob.userMessagingPlatform().then(function(result) {
+    alert(result);
+}).catch(function(error) {
+    alert(error);
+}).then(function() { // load ads in every case..
+    // load + show ads..
+});
+
 ```
 
 - all others functions same as in https://github.com/ratson/cordova-plugin-admob-free

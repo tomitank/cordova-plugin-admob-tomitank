@@ -82,9 +82,6 @@ public class AdMob extends CordovaPlugin {
             JSONObject options = inputs.optJSONObject(0);
             result = executeSetOptions(options, callbackContext);
 
-        } else if (Actions.UMP_SDK_ANDROID.equals(action)) {
-            result = userMessagingPlatform(callbackContext);
-
         } else if (Actions.GET_TRACKING.equals(action)) {
             result = getTrackingStatus(callbackContext);
 
@@ -154,13 +151,6 @@ public class AdMob extends CordovaPlugin {
         config.setOptions(options);
 
         callbackContext.success();
-        return null;
-    }
-
-    private PluginResult userMessagingPlatform(CallbackContext callbackContext) {
-        Log.w(TAG, "userMessagingPlatform");
-
-        callbackContext.success("authorized");
         return null;
     }
 
