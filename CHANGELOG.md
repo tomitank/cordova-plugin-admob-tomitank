@@ -1,8 +1,11 @@
 # Releases
 
-## 3.0.7 (2020-09-22)
+## 3.1.0 (2020-09-23)
 
-* better description, update PLAY_SERVICES_VERSION
+* revisited code especial the iOS
+* better description in README file
+* update PLAY_SERVICES_VERSION to 16.0.+
+* all prepare() functions return the ad id
 
 ## 3.0.6 (2020-09-22)
 
