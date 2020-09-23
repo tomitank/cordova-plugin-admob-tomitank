@@ -1,5 +1,9 @@
 # Releases
 
+## 3.0.7 (2020-09-22)
+
+* better description, update PLAY_SERVICES_VERSION
+
 ## 3.0.6 (2020-09-22)
 
 * to add User Messaging Platform SDK for iOS

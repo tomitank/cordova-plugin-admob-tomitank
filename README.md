@@ -8,14 +8,32 @@ Usage:
 -------------------------------------------------------
 Use directly with iOS 14 AppTrackingTransparency module (recommended)
 ```
-admob.getTrackingStatus().then(function(result) {
+admob.interstitial.config({ id: admobid.interstitial, isTesting: false, autoShow: false });
 
-    alert(result);
+admob.banner.config({ id: admobid.banner, overlap: true, isTesting: false, autoShow: true });
 
-    admob.trackingStatusForm().then(function(result) {
-        alert(result);
-        // load + show ads..
-    });
+admob.getTrackingStatus().then(function(status) { // get status..
+
+    if (status == 'notDetermined') { // not determined..
+
+        navigator.notification.confirm(LANGUAGE.tracking_info_msg, function() { // open a native popup for infos..
+
+            admob.trackingStatusForm().then(function(status) { // iOS tracking form..
+
+                // show ads..
+            });
+
+        }, LANGUAGE.tracking_info, [LANGUAGE.okay]);
+
+    } else { // determined..
+
+        // show ads..
+
+        if (status != 'authorized') { // not authorized show a motivation popup.. (optional)
+
+            // navigator.notification.confirm..
+        }
+    }
 });
 ```
 OR Use with User Messaging Platform SDK (not recommended - 2020.09.22)
