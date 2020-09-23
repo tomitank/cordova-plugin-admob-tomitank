@@ -57,7 +57,7 @@ public class RewardVideoExecutor extends AbstractExecutor {
                                 .addNetworkExtrasBundle(AdMobAdapter.class, extras)
                                 .build();
                         rewardedVideoAd.loadAd(plugin.config.getRewardedVideoAdUnitId(), adRequest);
-                        delayCallback.success();
+                        delayCallback.success(plugin.config.getRewardedVideoAdUnitId());
                     }
                 }
             }

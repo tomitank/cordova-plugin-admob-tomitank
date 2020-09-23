@@ -21,6 +21,11 @@ admob.getTrackingStatus().then(function(status) { // get status..
             admob.trackingStatusForm().then(function(status) { // iOS tracking form..
 
                 // show ads..
+
+                if (status != 'authorized') { // not authorized show a motivation popup.. (optional)
+
+                    // navigator.notification.confirm..
+                }
             });
 
         }, LANGUAGE.tracking_info, [LANGUAGE.okay]);
@@ -45,6 +50,15 @@ admob.userMessagingPlatform().then(function(result) {
 }).then(function() { // load ads in every case..
     // load + show ads..
 });
+```
+
+Difference against the admob-free plugin:
+-------------------------------------------------------
+All prepare() functions return the ad id!
+```
+admob.banner.prepare().then(function(ad_id) {});
+admob.rewardvideo.prepare().then(function(ad_id) {});
+admob.interstitial.prepare().then(function(ad_id) {});
 ```
 
 - all others functions same as in https://github.com/ratson/cordova-plugin-admob-free

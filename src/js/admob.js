@@ -94,7 +94,8 @@ export const rewardvideo = new RewardVideo()
  * Set to true, to allow banner overlap webview.
  * @param {boolean} [options.offsetTopBar=false]
  * Set to true to avoid ios7 status bar overlap.
- * @param {boolean} [options.isTesting=false]    Receiving test ad.
+ * @param {boolean} [options.isTesting=false]
+ * Receiving test ad.
  * @param {boolean} [options.autoShow=true]
  * Auto show interstitial ad when loaded.
  *

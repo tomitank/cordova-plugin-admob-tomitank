@@ -3,10 +3,11 @@ import { buildEvents, exec, translateOptions } from './utils'
 /**
  * Banner config object.
  * @typedef {BaseConfig} BannerConfig
- * @property {boolean} [bannerAtTop=false] - set to true, to put banner at top
- * @property {boolean} [overlap=true] -
+ * @property {boolean} [bannerAtTop=false]
+ * set to true, to put banner at top
+ * @property {boolean} [overlap=true]
  * set to true, to allow banner overlap webview
- * @property {boolean} [offsetTopBar=false] -
+ * @property {boolean} [offsetTopBar=false]
  * set to true to avoid ios7 status bar overlap
  * @property {string} [size=SMART_BANNER] - {@link BANNER_SIZE}
  */
@@ -21,32 +22,32 @@ const events = buildEvents('banner', [
 
 /**
  * @typedef {Object} BANNER_SIZE
+ * @property {string} FLUID - FLUID
  * @property {string} BANNER - BANNER
- * @property {string} IAB_BANNER - IAB_BANNER
- * @property {string} IAB_LEADERBOARD - IAB_LEADERBOARD
  * @property {string} IAB_MRECT - IAB_MRECT
+ * @property {string} IAB_BANNER - IAB_BANNER
  * @property {string} LARGE_BANNER - LARGE_BANNER
  * @property {string} SMART_BANNER - SMART_BANNER
- * @property {string} FLUID - FLUID
+ * @property {string} IAB_LEADERBOARD - IAB_LEADERBOARD
  */
 /**
  * @constant
  * @type {Object}
  */
 const sizes = {
+  FLUID: 'FLUID',
   BANNER: 'BANNER',
-  IAB_BANNER: 'IAB_BANNER',
-  IAB_LEADERBOARD: 'IAB_LEADERBOARD',
   IAB_MRECT: 'IAB_MRECT',
+  IAB_BANNER: 'IAB_BANNER',
   LARGE_BANNER: 'LARGE_BANNER',
   SMART_BANNER: 'SMART_BANNER',
-  FLUID: 'FLUID',
+  IAB_LEADERBOARD: 'IAB_LEADERBOARD',
   // android-only
+  SEARCH: 'SEARCH',
   FULL_BANNER: 'FULL_BANNER',
   LEADERBOARD: 'LEADERBOARD',
-  MEDIUM_RECTANGLE: 'MEDIUM_RECTANGLE',
-  SEARCH: 'SEARCH',
   WIDE_SKYSCRAPER: 'WIDE_SKYSCRAPER',
+  MEDIUM_RECTANGLE: 'MEDIUM_RECTANGLE',
 }
 
 /**

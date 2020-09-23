@@ -46,7 +46,7 @@ public class InterstitialExecutor extends AbstractExecutor {
                 interstitialAd.setAdListener(new InterstitialListener(InterstitialExecutor.this));
                 Log.i("interstitial", config.getInterstitialAdUnitId());
                 interstitialAd.loadAd(plugin.buildAdRequest());
-                delayCallback.success();
+                delayCallback.success(config.getInterstitialAdUnitId());
             }
         });
         return null;

@@ -78,13 +78,14 @@ public class BannerExecutor extends AbstractExecutor {
 
                 bannerVisible = false;
                 adView.loadAd(plugin.buildAdRequest());
-
-//                if (config.autoShowBanner) {
-//                    executeShowAd(true, null);
-//                }
+/*
+                if (config.autoShowBanner) {
+                    executeShowAd(true, null);
+                }
+*/
                 Log.w("banner", plugin.config.getBannerAdUnitId());
 
-                callbackContext.success();
+                callbackContext.success(plugin.config.getBannerAdUnitId());
             }
         });
 

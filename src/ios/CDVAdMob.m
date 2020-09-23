@@ -109,7 +109,7 @@
     NSArray* args = command.arguments;
 
     NSUInteger argc = [args count];
-    if( argc >= 1 ) {
+    if (argc >= 1) {
         NSDictionary* options = [command argumentAtIndex:0 withDefault:[NSNull null]];
 
         [self __setOptions:options];
@@ -132,31 +132,18 @@
     if (@available(iOS 14.0, *)) {
 
         if ([ATTrackingManager trackingAuthorizationStatus] == ATTrackingManagerAuthorizationStatusNotDetermined) {
-
             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"notDetermined"];
-            [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
-
         } else if ([ATTrackingManager trackingAuthorizationStatus] == ATTrackingManagerAuthorizationStatusRestricted) {
-
             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"restricted"];
-            [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
-
-        } else if ([ATTrackingManager trackingAuthorizationStatus] == ATTrackingManagerAuthorizationStatusDenied) {
-
+        } else if ([ATTrackingManager trackingAuthorizationStatus] == ATTrackingManagerAuthorizationStatusDenied)  {
             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"denied"];
-            [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
-
         } else {
-
             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"authorized"];
-            [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
         }
-
     } else {
-
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"authorized"];
-        [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
     }
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
 }
 
 - (void) trackingStatusForm:(CDVInvokedUrlCommand *)command {
@@ -165,39 +152,12 @@
     if (@available(iOS 14.0, *)) {
 
         [ATTrackingManager requestTrackingAuthorizationWithCompletionHandler:^(ATTrackingManagerAuthorizationStatus status) {
-
-            CDVPluginResult *pluginResult;
-            NSString *callbackId = command.callbackId;
-
-            if (status == ATTrackingManagerAuthorizationStatusNotDetermined) {
-
-                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"notDetermined"];
-                [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
-
-            } else if (status == ATTrackingManagerAuthorizationStatusRestricted) {
-
-                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"restricted"];
-                [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
-
-            } else if (status == ATTrackingManagerAuthorizationStatusDenied) {
-
-                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"denied"];
-                [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
-
-            } else {
-
-                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"authorized"];
-                [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
-            }
-      }];
+            [self getTrackingStatus:command]; // return with status string instead of "status" variable..
+        }];
 
     } else {
 
-        CDVPluginResult *pluginResult;
-        NSString *callbackId = command.callbackId;
-
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"authorized"];
-        [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+        [self getTrackingStatus:command]; // return with authorized string..
     }
 }
 
@@ -277,12 +237,11 @@
                             // App can start requesting ads.
                             NSLog(@"Obtained");
                             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"obtained"];
-                            [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
                         } else {
                             NSLog(@"Not obtained");
                             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"notObtained"];
-                            [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
                         }
+                        [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
                     }];
             } else {
                 // Keep the form available for changes to user consent.
@@ -295,7 +254,7 @@
 }
 
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-// base admob functions start here!
+// Banner functions
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 // The javascript from the AdMob plugin calls this when createBannerView is
@@ -310,23 +269,24 @@
     NSArray* args = command.arguments;
 
     NSUInteger argc = [args count];
-    if( argc >= 1 ) {
+    if (argc >= 1) {
         NSDictionary* options = [command argumentAtIndex:0 withDefault:[NSNull null]];
         [self __setOptions:options];
         autoShowBanner = autoShow;
     }
 
-    if(! self.bannerView) {
+    if(!self.bannerView) {
         [self __createBanner];
     }
 
     if(autoShowBanner) {
         bannerShow = autoShowBanner;
-
         [self __showAd:YES];
     }
 
-    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    NSString *callbackString = self.publisherId;
+
+    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:callbackString];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
 }
 
@@ -340,54 +300,11 @@
         [self.bannerView setDelegate:nil];
         [self.bannerView removeFromSuperview];
         self.bannerView = nil;
-
         [self resizeViews];
     }
 
     // Call the success callback that was passed in through the javascript.
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-    [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
-}
-
-- (void) prepareInterstitial:(CDVInvokedUrlCommand *)command {
-    NSLog(@"prepareInterstitial");
-
-    CDVPluginResult *pluginResult;
-    NSString *callbackId = command.callbackId;
-    NSArray* args = command.arguments;
-
-    NSUInteger argc = [args count];
-    if (argc >= 1) {
-        NSDictionary* options = [command argumentAtIndex:0 withDefault:[NSNull null]];
-        [self __setOptions:options];
-        autoShowInterstitial = autoShow;
-    }
-
-    [self __cycleInterstitial];
-    [self.interstitialView loadRequest:[self __buildAdRequest]];
-
-    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-    [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
-
-}
-
-- (void) createInterstitialView:(CDVInvokedUrlCommand *)command {
-    NSLog(@"createInterstitialView");
-
-    CDVPluginResult *pluginResult;
-    NSString *callbackId = command.callbackId;
-    NSArray* args = command.arguments;
-
-    NSUInteger argc = [args count];
-    if (argc >= 1) {
-        NSDictionary* options = [command argumentAtIndex:0 withDefault:[NSNull null]];
-        [self __setOptions:options];
-        autoShowInterstitial = autoShow;
-    }
-
-    [self __cycleInterstitial];
-    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-
     [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
 }
 
@@ -407,15 +324,83 @@
 
     bannerShow = show;
 
-    if(! self.bannerView) {
+    if(!self.bannerView) {
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"adView is null, call createBannerView first."];
-
     } else {
         [self __showAd:show];
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-
     }
 
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+}
+
+- (void) requestAd:(CDVInvokedUrlCommand *)command {
+    NSLog(@"requestAd");
+
+    CDVPluginResult *pluginResult;
+    NSString *callbackId = command.callbackId;
+    NSArray* args = command.arguments;
+
+    NSUInteger argc = [args count];
+    if (argc >= 1) {
+        NSDictionary* options = [command argumentAtIndex:0 withDefault:[NSNull null]];
+        [self __setOptions:options];
+    }
+
+    if(!self.bannerView) {
+        [self __createBanner];
+    } else {
+        [self.bannerView loadRequest:[self __buildAdRequest]];
+    }
+
+    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+}
+
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+// Interstitial functions
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+- (void) prepareInterstitial:(CDVInvokedUrlCommand *)command {
+    NSLog(@"prepareInterstitial");
+
+    CDVPluginResult *pluginResult;
+    NSString *callbackId = command.callbackId;
+    NSArray* args = command.arguments;
+
+    NSUInteger argc = [args count];
+    if (argc >= 1) {
+        NSDictionary* options = [command argumentAtIndex:0 withDefault:[NSNull null]];
+        [self __setOptions:options];
+        autoShowInterstitial = autoShow;
+    }
+
+    [self __cycleInterstitial];
+    [self.interstitialView loadRequest:[self __buildAdRequest]];
+
+    NSString *callbackString = self.interstitialAdId;
+
+    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:callbackString];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+}
+
+- (void) createInterstitialView:(CDVInvokedUrlCommand *)command {
+    NSLog(@"createInterstitialView");
+
+    CDVPluginResult *pluginResult;
+    NSString *callbackId = command.callbackId;
+    NSArray* args = command.arguments;
+
+    NSUInteger argc = [args count];
+    if (argc >= 1) {
+        NSDictionary* options = [command argumentAtIndex:0 withDefault:[NSNull null]];
+        [self __setOptions:options];
+        autoShowInterstitial = autoShow;
+    }
+
+    [self __cycleInterstitial];
+
+    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
 }
 
@@ -425,9 +410,8 @@
     CDVPluginResult *pluginResult;
     NSString *callbackId = command.callbackId;
 
-    if(! self.interstitialView) {
+    if(!self.interstitialView) {
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"interstitialAd is null, call createInterstitialView first."];
-
     } else {
         BOOL showed = [self __showInterstitial:YES];
         if (showed) {
@@ -455,30 +439,6 @@
     [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
 }
 
-- (void) requestAd:(CDVInvokedUrlCommand *)command {
-    NSLog(@"requestAd");
-
-    CDVPluginResult *pluginResult;
-    NSString *callbackId = command.callbackId;
-    NSArray* args = command.arguments;
-
-    NSUInteger argc = [args count];
-    if (argc >= 1) {
-        NSDictionary* options = [command argumentAtIndex:0 withDefault:[NSNull null]];
-        [self __setOptions:options];
-    }
-
-    if(! self.bannerView) {
-        [self __createBanner];
-
-    } else {
-        [self.bannerView loadRequest:[self __buildAdRequest]];
-    }
-
-    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-    [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
-}
-
 - (void) requestInterstitialAd:(CDVInvokedUrlCommand *)command {
     NSLog(@"requestInterstitialAd");
 
@@ -492,9 +452,8 @@
         [self __setOptions:options];
     }
 
-    if(! self.interstitialView) {
+    if(!self.interstitialView) {
         [self __cycleInterstitial];
-
     } else {
         [self.interstitialView loadRequest:[self __buildAdRequest]];
     }
@@ -502,6 +461,10 @@
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
 }
+
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+// RewardVideo functions
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 - (void) createRewardVideo:(CDVInvokedUrlCommand *)command {
     NSLog(@"createRewardVideo");
@@ -518,12 +481,12 @@
     }
 
     [self __cycleRewardVideo];
-    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
 
+    NSString *callbackString = self.rewardVideoId;
+
+    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:callbackString];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
-
 }
-
 
 - (void) showRewardVideo:(CDVInvokedUrlCommand *)command {
     NSLog(@"showRewardVideo");
@@ -531,9 +494,8 @@
     CDVPluginResult *pluginResult;
     NSString *callbackId = command.callbackId;
 
-    if(! self.rewardVideoView) {
+    if(!self.rewardVideoView) {
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"rewardVideoAd is null, call createRewardVideo first."];
-
     } else {
         [self __showRewardedVideo:YES];
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
@@ -541,7 +503,6 @@
     }
 
     [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
-
 }
 
 - (void) isRewardVideoReady:(CDVInvokedUrlCommand *)command {
@@ -573,7 +534,7 @@
             }
 
             // and create a new video. We set the delegate so that we can be notified of when
-            if (!self.rewardVideoView){
+            if (!self.rewardVideoView) {
                 self.rewardVideoView = [GADRewardBasedVideoAd sharedInstance];
                 self.rewardVideoView.delegate = self;
 
@@ -582,7 +543,6 @@
         }
     }
 }
-
 
 - (GADAdSize)__AdSizeFromString:(NSString *)string {
     if ([string isEqualToString:@"BANNER"]) {
@@ -705,7 +665,7 @@
     //self.webView.superview.backgroundColor = [UIColor blackColor];
     //self.webView.superview.tintColor = [UIColor whiteColor];
 
-    if (!self.bannerView){
+    if (!self.bannerView) {
         self.bannerView = [[GADBannerView alloc] initWithAdSize:adSize];
         self.bannerView.adUnitID = [self publisherId];
         self.bannerView.delegate = self;
@@ -762,7 +722,7 @@
 - (void) __showAd:(BOOL)show {
     //NSLog(@"Show Ad: %d", show);
 
-    if (!self.bannerIsInitialized){
+    if (!self.bannerIsInitialized) {
         [self __createBanner];
     }
 
@@ -771,17 +731,14 @@
         [self resizeViews];
     } else if (show) {
         //NSLog(@"show now: %d", show);
-
         UIView* parentView = self.bannerOverlap ? self.webView : [self.webView superview];
         [parentView addSubview:self.bannerView];
         [parentView bringSubviewToFront:self.bannerView];
         [self resizeViews];
-
         self.bannerIsVisible = YES;
     } else {
         [self.bannerView removeFromSuperview];
         [self resizeViews];
-
         self.bannerIsVisible = NO;
     }
 }
@@ -796,10 +753,9 @@
     }
 
     // and create a new interstitial. We set the delegate so that we can be notified of when
-    if (!self.interstitialView){
+    if (!self.interstitialView) {
         self.interstitialView = [[GADInterstitial alloc] initWithAdUnitID:self.interstitialAdId];
         self.interstitialView.delegate = self;
-
         [self.interstitialView loadRequest:[self __buildAdRequest]];
     }
 }
@@ -807,7 +763,7 @@
 - (BOOL) __showInterstitial:(BOOL)show {
     NSLog(@"__showInterstitial");
 
-    if (!self.interstitialView){
+    if (!self.interstitialView) {
         [self __cycleInterstitial];
     }
 
@@ -823,7 +779,7 @@
 - (void) __showRewardedVideo:(BOOL)show {
     NSLog(@"__showRewardedVideo");
 
-    if (!self.rewardVideoView){
+    if (!self.rewardVideoView) {
         [self __cycleRewardVideo];
     }
 
@@ -868,13 +824,13 @@
     //CGFloat top = isIOS7 ? MIN(sf.size.height, sf.size.width) : 0.0;
     float top = 0.0;
 
-    //if(! self.offsetTopBar) top = 0.0;
+    //if(!self.offsetTopBar) top = 0.0;
 
     wf.origin.y = top;
     wf.size.height = pr.size.height - top;
 
-    if( self.bannerView ) {
-        if( pr.size.width > pr.size.height ) {
+    if (self.bannerView ) {
+        if (pr.size.width > pr.size.height ) {
             if(GADAdSizeEqualToSize(self.bannerView.adSize, kGADAdSizeSmartBannerPortrait)) {
                 self.bannerView.adSize = kGADAdSizeSmartBannerLandscape;
             }
@@ -888,11 +844,11 @@
 
         // if the ad is not showing or the ad is hidden, we don't want to resize anything.
         UIView* parentView = self.bannerOverlap ? self.webView : [self.webView superview];
-        BOOL adIsShowing = ([self.bannerView isDescendantOfView:parentView]) && (! self.bannerView.hidden);
+        BOOL adIsShowing = ([self.bannerView isDescendantOfView:parentView]) && (!self.bannerView.hidden);
 
-        if( adIsShowing ) {
+        if (adIsShowing ) {
             //NSLog( @"banner visible" );
-            if( bannerAtTop ) {
+            if (bannerAtTop ) {
                 if(bannerOverlap) {
                     wf.origin.y = top;
                     bf.origin.y = 0; // banner is subview of webview
@@ -928,7 +884,7 @@
                 // move webview to top
                 wf.origin.y = top;
 
-                if( bannerOverlap ) {
+                if (bannerOverlap ) {
                     bf.origin.y = wf.size.height - bf.size.height; // banner is subview of webview
 
                     if (@available(iOS 11.0, *)) {
@@ -957,7 +913,7 @@
                 }
             }
 
-            if(! bannerOverlap) wf.size.height -= bf.size.height;
+            if(!bannerOverlap) wf.size.height -= bf.size.height;
 
             bf.origin.x = (pr.size.width - bf.size.width) * 0.5f;
 
@@ -1045,7 +1001,7 @@
 - (void) interstitialDidReceiveAd:(GADInterstitial *)interstitial {
     [self fireEvent:@"" event:@"admob.interstitial.events.LOAD" withData:nil];
     [self fireEvent:@"" event:@"onReceiveInterstitialAd" withData:nil];
-    if (self.interstitialView){
+    if (self.interstitialView) {
         if(self.autoShowInterstitial) {
             [self __showInterstitial:YES];
         }
@@ -1084,7 +1040,7 @@
         self.isRewardedVideoLoading = false;
     }
     [self fireEvent:@"" event:@"admob.rewardvideo.events.LOAD" withData:nil];
-    if (self.rewardVideoView){
+    if (self.rewardVideoView) {
         if(self.autoShowRewardVideo) {
             [self __showRewardedVideo:YES];
         }
