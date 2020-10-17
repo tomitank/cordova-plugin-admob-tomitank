@@ -201,11 +201,15 @@
             NSLog(@"Proceed to form..");
             UMPFormStatus formStatus = UMPConsentInformation.sharedInstance.formStatus;
             if (formStatus == UMPFormStatusAvailable) {
-                NSLog(@"Loading form..");
+                NSLog(@"Form status is available");
                 [self __loadForm:command];
-            } else {
+            } else if (formStatus == UMPFormStatusUnavailable) {
                 NSLog(@"Form status is not available");
                 pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"formStatusNotAvailable"];
+                [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+            } else if (formStatus == UMPFormStatusUnknown) {
+                NSLog(@"Form status is unknown");
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"formStatusUnknown"];
                 [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
             }
         }
@@ -228,6 +232,7 @@
             // Present the form. You can also hold on to the reference to present later.
             NSLog(@"Presenting form..");
             if (UMPConsentInformation.sharedInstance.consentStatus == UMPConsentStatusRequired) {
+                    NSLog(@"Consent Status Required");
                     [form presentFromViewController:self.viewController completionHandler:^(NSError *_Nullable dismissError) {
 
                         CDVPluginResult *pluginResult;
@@ -237,9 +242,15 @@
                             // App can start requesting ads.
                             NSLog(@"Obtained");
                             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"obtained"];
+                        } else if (UMPConsentInformation.sharedInstance.consentStatus == UMPConsentStatusRequired) {
+                            NSLog(@"Required");
+                            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"required"];
+                        } else if (UMPConsentInformation.sharedInstance.consentStatus == UMPConsentStatusNotRequired) {
+                            NSLog(@"Not Required");
+                            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"NotRequired"];
                         } else {
-                            NSLog(@"Not obtained");
-                            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"notObtained"];
+                            NSLog(@"Unknown");
+                            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"unknown"];
                         }
                         [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
                     }];

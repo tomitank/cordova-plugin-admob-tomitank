@@ -14,15 +14,18 @@ admob.banner.config({ id: admobid.banner, overlap: true, isTesting: false, autoS
 
 admob.getTrackingStatus().then(function(status) { // get status..
 
-    if (status == 'notDetermined') { // not determined..
+    if (status === 'notDetermined') { // not determined..
 
         navigator.notification.confirm(LANGUAGE.tracking_info_msg, function() { // open a native popup for infos..
 
             admob.trackingStatusForm().then(function(status) { // iOS tracking form..
+                if (status === 'authorized' || status === 'restricted') {
+                    // show ads..
 
-                // show ads..
+                }
 
-                if (status != 'authorized') { // not authorized show a motivation popup.. (optional)
+                if (status === 'restricted' || status === 'denied') {
+                    // not authorized show a motivation popup.. (optional)
 
                     // navigator.notification.confirm..
                 }
@@ -34,7 +37,13 @@ admob.getTrackingStatus().then(function(status) { // get status..
 
         // show ads..
 
-        if (status != 'authorized') { // not authorized show a motivation popup.. (optional)
+        if (status === 'authorized' || status === 'restricted') {
+            // show ads..
+
+        }
+
+        if (status === 'restricted' || status === 'denied') {
+            // not authorized show a motivation popup.. (optional)
 
             // navigator.notification.confirm..
         }
