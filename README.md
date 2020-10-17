@@ -19,13 +19,10 @@ admob.getTrackingStatus().then(function(status) { // get status..
         navigator.notification.confirm(LANGUAGE.tracking_info_msg, function() { // open a native popup for infos..
 
             admob.trackingStatusForm().then(function(status) { // iOS tracking form..
-                if (status === 'authorized' || status === 'restricted') {
-                    // show ads..
+                // show ads..
 
-                }
-
-                if (status === 'restricted' || status === 'denied') {
-                    // not authorized show a motivation popup.. (optional)
+                if (status !== 'authorized') {
+                    // not authorized to track user, show a motivation popup.. (optional)
 
                     // navigator.notification.confirm..
                 }
@@ -34,16 +31,10 @@ admob.getTrackingStatus().then(function(status) { // get status..
         }, LANGUAGE.tracking_info, [LANGUAGE.okay]);
 
     } else { // determined..
-
         // show ads..
 
-        if (status === 'authorized' || status === 'restricted') {
-            // show ads..
-
-        }
-
-        if (status === 'restricted' || status === 'denied') {
-            // not authorized show a motivation popup.. (optional)
+        if (status !== 'authorized') {
+            // not authorized to track user, show a motivation popup.. (optional)
 
             // navigator.notification.confirm..
         }
