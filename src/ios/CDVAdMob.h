@@ -8,7 +8,7 @@
 #import <GoogleMobileAds/GADBannerView.h>
 #import <GoogleMobileAds/GADInterstitialAd.h>
 #import <GoogleMobileAds/GADBannerViewDelegate.h>
-#import <GoogleMobileAds/GADInterstitialAdDelegate.h>
+#import <GoogleMobileAds/GADInterstitialAdLoadCompletionHandler.h>
 #import <AppTrackingTransparency/AppTrackingTransparency.h>
 #import <UserMessagingPlatform/UserMessagingPlatform.h>
 #import <AdSupport/ASIdentifierManager.h>
@@ -24,7 +24,7 @@
 
 // This version of the AdMob plugin has been tested with Cordova version 9.0.0.
 
-@interface CDVAdMob : CDVPlugin <GADBannerViewDelegate, GADInterstitialAdDelegate> {
+@interface CDVAdMob : CDVPlugin <GADBannerViewDelegate, GADInterstitialAdLoadCompletionHandler> {
     @protected
     UIView* _safeAreaBackgroundView;
 }

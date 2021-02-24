@@ -594,7 +594,7 @@
     [self fireEvent:@"" event:@"onDismissAd" withData:nil];
 }
 
-#pragma mark GADInterstitialAdDelegate implementation
+#pragma mark GADInterstitialAdLoadCompletionHandler implementation
 
 - (void) interstitial:(GADInterstitialAd *)ad
     didFailToReceiveAdWithError:(NSError *)error {
