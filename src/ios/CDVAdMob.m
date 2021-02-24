@@ -16,7 +16,6 @@
 
 - (void) deviceOrientationChange:(NSNotification *)notification;
 - (void) fireEvent:(NSString *)obj event:(NSString *)eventName withData:(NSString *)jsonStr;
-- (BOOL) canPresentFromRootViewController:(nonnull UIViewController *)rootViewController error:(NSError *_Nullable *_Nullable)error;
 
 @end
 
@@ -415,9 +414,13 @@
 
     [self __cycleInterstitial];
 
-    NSString *callbackString = self.interstitialAdId;
+    if (self.interstitialView) {
+        NSString *callbackString = self.interstitialAdId;
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:callbackString];
+    } else {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Failed to load interstitial ad."];
+    }
 
-    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:callbackString];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
 }
 
@@ -443,7 +446,7 @@
     CDVPluginResult *pluginResult;
     NSString *callbackId = command.callbackId;
 
-    if (self.interstitialView && [self canPresentFromRootViewController]) {
+    if (self.interstitialView && [self.interstitialView canPresentFromRootViewController]) {
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:true];
     } else {
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:false];
@@ -466,11 +469,13 @@
     }
 
     // and create a new interstitial. We set the delegate so that we can be notified..
-    if (!self.interstitialView) {
-        [self.interstitialView loadRequest:[self __buildAdRequest]];
-        self.interstitialView = [[GADInterstitialAd alloc] initWithAdUnitID:self.interstitialAdId];
+    [GADInterstitialAd loadWithAdUnitID:self.interstitialAdId request:[self __buildAdRequest] completionHandler:^(GADInterstitialAd *ad, NSError *error) {
+        if (error) {
+            NSLog(@"Failed to load interstitial ad with error: %@", [error localizedDescription]);
+        }
+        self.interstitialView = ad;
         self.interstitialView.fullScreenContentDelegate = self;
-    }
+    }];
 }
 
 - (BOOL) __showInterstitial:(BOOL)show {
@@ -480,7 +485,7 @@
         [self __cycleInterstitial];
     }
 
-    if (self.interstitialView && [self canPresentFromRootViewController]) {
+    if (self.interstitialView && [self.interstitialView canPresentFromRootViewController]) {
         [self.interstitialView presentFromRootViewController:self.viewController];
         return true;
     } else {
@@ -636,7 +641,7 @@
     }
 }
 
-- (NSString *) __getAdMobDeviceId {
+- (NSString*) __getAdMobDeviceId {
     NSUUID* adid = [[ASIdentifierManager sharedManager] advertisingIdentifier];
     return [self __md5:adid.UUIDString];
 }
