@@ -265,11 +265,11 @@
         autoShowBanner = autoShow;
     }
 
-    if(!self.bannerView) {
+    if (!self.bannerView) {
         [self __createBanner];
     }
 
-    if(autoShowBanner) {
+    if (autoShowBanner) {
         bannerShow = autoShowBanner;
         [self __showAd:YES];
     }
@@ -286,7 +286,7 @@
     CDVPluginResult *pluginResult;
     NSString *callbackId = command.callbackId;
 
-    if(self.bannerView) {
+    if (self.bannerView) {
         [self.bannerView setDelegate:nil];
         [self.bannerView removeFromSuperview];
         self.bannerView = nil;
@@ -314,7 +314,7 @@
 
     bannerShow = show;
 
-    if(!self.bannerView) {
+    if (!self.bannerView) {
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"bannerView is null, call createBannerView first."];
     } else {
         [self __showAd:show];
@@ -337,7 +337,7 @@
         [self __setOptions:options];
     }
 
-    if(!self.bannerView) {
+    if (!self.bannerView) {
         [self __createBanner];
     } else {
         [self.bannerView loadRequest:[self __buildAdRequest]];
@@ -414,13 +414,9 @@
 
     [self __cycleInterstitial];
 
-    if (self.interstitialView) {
-        NSString *callbackString = self.interstitialAdId;
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:callbackString];
-    } else {
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Failed to load interstitial ad."];
-    }
+    NSString *callbackString = self.interstitialAdId;
 
+    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:callbackString];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
 }
 
@@ -446,7 +442,7 @@
     CDVPluginResult *pluginResult;
     NSString *callbackId = command.callbackId;
 
-    if (self.interstitialView && [self.interstitialView canPresentFromRootViewController:self error:nil]) {
+    if (self.interstitialView && [self.interstitialView canPresentFromRootViewController:self.viewController error:nil]) {
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:true];
     } else {
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:false];
@@ -487,7 +483,7 @@
         [self __cycleInterstitial];
     }
 
-    if (self.interstitialView && [self.interstitialView canPresentFromRootViewController:self error:nil]) {
+    if (self.interstitialView && [self.interstitialView canPresentFromRootViewController:self.viewController error:nil]) {
         [self.interstitialView presentFromRootViewController:self.viewController];
         return true;
     } else {
@@ -502,9 +498,9 @@
 
 - (void) fireEvent:(NSString *)obj event:(NSString *)eventName withData:(NSString *)jsonStr {
     NSString* js;
-    if(obj && [obj isEqualToString:@"window"]) {
+    if (obj && [obj isEqualToString:@"window"]) {
         js = [NSString stringWithFormat:@"var evt=document.createEvent(\"UIEvents\");evt.initUIEvent(\"%@\",true,false,window,0);window.dispatchEvent(evt);", eventName];
-    } else if(jsonStr && [jsonStr length] > 0) {
+    } else if (jsonStr && [jsonStr length] > 0) {
         js = [NSString stringWithFormat:@"javascript:cordova.fireDocumentEvent('%@',%@);", eventName, jsonStr];
     } else {
         js = [NSString stringWithFormat:@"javascript:cordova.fireDocumentEvent('%@');", eventName];
@@ -521,7 +517,7 @@
 }
 
 - (void) bannerViewDidReceiveAd:(GADBannerView *)bannerView {
-    if(self.bannerShow) {
+    if (self.bannerShow) {
         [self __showAd:YES];
     }
     NSString* jsonData = [NSString stringWithFormat:@"{ 'bannerHeight': '%d' }", (int)self.bannerView.frame.size.height];
@@ -560,8 +556,8 @@
 - (void) __interstitialLoaded { // was interstitialDidReceiveAd before SDK 8
     [self fireEvent:@"" event:@"admob.interstitial.events.LOAD" withData:nil];
     [self fireEvent:@"" event:@"onReceiveInterstitialAd" withData:nil];
-    if (self.interstitialView) {
-        if(self.autoShowInterstitial) {
+    if (self.interstitialView ) {
+        if (self.autoShowInterstitial) {
             [self __showInterstitial:YES];
         }
     }
@@ -634,7 +630,7 @@
         return kGADAdSizeFluid;
     } else if ([string isEqualToString:@"SMART_BANNER"]) {
         CGRect pr = self.webView.superview.bounds;
-        if(pr.size.width > pr.size.height) {
+        if (pr.size.width > pr.size.height) {
             return kGADAdSizeSmartBannerLandscape;
         }
         else {
@@ -765,18 +761,18 @@
     //CGFloat top = isIOS7 ? MIN(sf.size.height, sf.size.width) : 0.0;
     float top = 0.0;
 
-    //if(!self.offsetTopBar) top = 0.0;
+    //if (!self.offsetTopBar) top = 0.0;
 
     wf.origin.y = top;
     wf.size.height = pr.size.height - top;
 
     if (self.bannerView) {
         if (pr.size.width > pr.size.height ) {
-            if(GADAdSizeEqualToSize(self.bannerView.adSize, kGADAdSizeSmartBannerPortrait)) {
+            if (GADAdSizeEqualToSize(self.bannerView.adSize, kGADAdSizeSmartBannerPortrait)) {
                 self.bannerView.adSize = kGADAdSizeSmartBannerLandscape;
             }
         } else {
-            if(GADAdSizeEqualToSize(self.bannerView.adSize, kGADAdSizeSmartBannerLandscape)) {
+            if (GADAdSizeEqualToSize(self.bannerView.adSize, kGADAdSizeSmartBannerLandscape)) {
                 self.bannerView.adSize = kGADAdSizeSmartBannerPortrait;
             }
         }
@@ -790,7 +786,7 @@
         if (adIsShowing) {
             //NSLog( @"banner visible" );
             if (bannerAtTop) {
-                if(bannerOverlap) {
+                if (bannerOverlap) {
                     wf.origin.y = top;
                     bf.origin.y = 0; // banner is subview of webview
 
@@ -854,7 +850,7 @@
                 }
             }
 
-            if(!bannerOverlap) wf.size.height -= bf.size.height;
+            if (!bannerOverlap) wf.size.height -= bf.size.height;
 
             bf.origin.x = (pr.size.width - bf.size.width) * 0.5f;
 
