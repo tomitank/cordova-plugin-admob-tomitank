@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin xmlns:android="http://schemas.android.com/apk/res/android" id="cordova-plugin-admob-tomitank"
-    version="3.1.0" xmlns="http://apache.org/cordova/ns/plugins/1.0">
+    version="4.0.0" xmlns="http://apache.org/cordova/ns/plugins/1.0">
     <name>Cordova AdMob Plugin</name>
     <description>Robust, reliable and easy to use Cordova Admob plugin for Android and iOS
         phone. Allows preloading and automatic loading of interstitials and banners plus more.
@@ -63,8 +63,6 @@
         <source-file src="src/android/CordovaEventBuilder.java" target-dir="src/name/tomitank/cordova/admob" />
         <source-file src="src/android/banner/BannerExecutor.java" target-dir="src/name/tomitank/cordova/admob/banner" />
         <source-file src="src/android/banner/BannerListener.java" target-dir="src/name/tomitank/cordova/admob/banner" />
-        <source-file src="src/android/rewardvideo/RewardVideoExecutor.java" target-dir="src/name/tomitank/cordova/admob/rewardvideo" />
-        <source-file src="src/android/rewardvideo/RewardVideoListener.java" target-dir="src/name/tomitank/cordova/admob/rewardvideo" />
         <source-file src="src/android/interstitial/InterstitialExecutor.java" target-dir="src/name/tomitank/cordova/admob/interstitial" />
         <source-file src="src/android/interstitial/InterstitialListener.java" target-dir="src/name/tomitank/cordova/admob/interstitial" />
     </platform>
@@ -83,7 +81,7 @@
                 <source url="https://cdn.cocoapods.org/"/>
             </config>
             <pods>
-                <pod name="Google-Mobile-Ads-SDK" spec="~> 7.65.0" />
+                <pod name="Google-Mobile-Ads-SDK" spec="~> 8.1.0" />
                 <pod name="GoogleUserMessagingPlatform" spec="~> 1.2.0" />
             </pods>
         </podspec>

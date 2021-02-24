@@ -4,7 +4,6 @@ import { wrapCallbacks, translateOptions } from './utils'
 
 import { Banner } from './banner'
 import { Interstitial } from './interstitial'
-import { RewardVideo } from './reward-video'
 
 /**
  * @type {Banner}
@@ -51,32 +50,6 @@ export const banner = new Banner()
  * admob.interstitial.show()
  */
 export const interstitial = new Interstitial()
-
-/**
- * @external {cordova-admob-mediation} https://github.com/rehy/cordova-admob-mediation
- */
-/**
- * Reward video requires mediation SDK to be installed,
- * see {@link cordova-admob-mediation} for list of supported networks.
- * @type {RewardVideo}
- * @since 0.6
- * @emits {admob.rewardvideo.events.LOAD}
- * @emits {admob.rewardvideo.events.LOAD_FAIL}
- * @emits {admob.rewardvideo.events.OPEN}
- * @emits {admob.rewardvideo.events.CLOSE}
- * @emits {admob.rewardvideo.events.EXIT_APP}
- * @emits {admob.rewardvideo.events.START}
- * @emits {admob.rewardvideo.events.REWARD}
- * @example
- * admob.rewardvideo.config({
- *  id: 'ca-app-pub-xxx/xxx',
- * })
- *
- * admob.rewardvideo.prepare()
- *
- * admob.rewardvideo.show()
- */
-export const rewardvideo = new RewardVideo()
 
 // Old APIs
 
@@ -128,14 +101,10 @@ export function setOptions(options, successCallback, failureCallback) {
         case 'interstitialAdId':
           interstitial._config.id = options[k]
           break
-        case 'rewardVideoId':
-          rewardvideo._config.id = options[k]
-          break
         case 'isTesting':
         case 'autoShow':
           banner._config[k] = options[k]
           interstitial._config[k] = options[k]
-          rewardvideo._config[k] = options[k]
           break
         default:
       }
@@ -158,7 +127,7 @@ export const AD_SIZE = Banner.sizes
 
 /* eslint-disable no-console */
 /**
- * @deprecated since version 0.6
+ * @deprecated since version 3.1
  */
 export function userMessagingPlatform() {
   return new Promise((resolve, reject) => {
@@ -167,7 +136,7 @@ export function userMessagingPlatform() {
 }
 
 /**
- * @deprecated since version 0.6
+ * @deprecated since version 3.1
  */
 export function getTrackingStatus() {
   return new Promise((resolve, reject) => {
@@ -176,7 +145,7 @@ export function getTrackingStatus() {
 }
 
 /**
- * @deprecated since version 0.6
+ * @deprecated since version 3.1
  */
 export function trackingStatusForm() {
   return new Promise((resolve, reject) => {

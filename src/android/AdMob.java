@@ -26,7 +26,6 @@ import java.util.Iterator;
 
 import name.tomitank.cordova.admob.banner.BannerExecutor;
 import name.tomitank.cordova.admob.interstitial.InterstitialExecutor;
-import name.tomitank.cordova.admob.rewardvideo.RewardVideoExecutor;
 
 /**
  * This class represents the native implementation for the AdMob Cordova plugin.
@@ -43,7 +42,6 @@ public class AdMob extends CordovaPlugin {
 
     private BannerExecutor bannerExecutor = null;
     private InterstitialExecutor interstitialExecutor = null;
-    private RewardVideoExecutor rewardVideoExecutor = null;
 
     private boolean isGpsAvailable = false;
 
@@ -71,9 +69,6 @@ public class AdMob extends CordovaPlugin {
         }
         if (interstitialExecutor == null) {
             interstitialExecutor = new InterstitialExecutor(this);
-        }
-        if (rewardVideoExecutor == null) {
-            rewardVideoExecutor = new RewardVideoExecutor(this);
         }
 
         PluginResult result = null;
@@ -121,17 +116,6 @@ public class AdMob extends CordovaPlugin {
 
         } else if(Actions.IS_INTERSTITIAL_READY.equals(action)) {
             result = interstitialExecutor.isReady(callbackContext);
-
-        } else if (Actions.CREATE_REWARD_VIDEO.equals(action)) {
-            JSONObject options = inputs.optJSONObject(0);
-            result = rewardVideoExecutor.prepareAd(options, callbackContext);
-
-        } else if (Actions.SHOW_REWARD_VIDEO.equals(action)) {
-            boolean show = inputs.optBoolean(0);
-            result = rewardVideoExecutor.showAd(show, callbackContext);
-
-        } else if(Actions.IS_REWARD_VIDEO_READY.equals(action)) {
-            result = rewardVideoExecutor.isReady(callbackContext);
 
         } else {
             Log.d(TAG, String.format("Invalid action passed: %s", action));
@@ -196,15 +180,6 @@ public class AdMob extends CordovaPlugin {
         }
         builder = builder.addNetworkExtrasBundle(AdMobAdapter.class, bundle);
 
-        if (config.gender != null) {
-            if ("male".compareToIgnoreCase(config.gender) != 0) {
-                builder.setGender(AdRequest.GENDER_MALE);
-            } else if ("female".compareToIgnoreCase(config.gender) != 0) {
-                builder.setGender(AdRequest.GENDER_FEMALE);
-            } else {
-                builder.setGender(AdRequest.GENDER_UNKNOWN);
-            }
-        }
         if (config.location != null) {
             builder.setLocation(config.location);
         }
@@ -252,10 +227,6 @@ public class AdMob extends CordovaPlugin {
         if (interstitialExecutor != null) {
             interstitialExecutor.destroy();
             interstitialExecutor = null;
-        }
-        if (rewardVideoExecutor != null) {
-            rewardVideoExecutor.destroy();
-            rewardVideoExecutor = null;
         }
         super.onDestroy();
     }

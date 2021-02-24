@@ -57,10 +57,10 @@ Difference against the admob-free plugin:
 All prepare() functions return the ad id!
 ```
 admob.banner.prepare().then(function(ad_id) {});
-admob.rewardvideo.prepare().then(function(ad_id) {});
 admob.interstitial.prepare().then(function(ad_id) {});
 ```
 
+- IMPORTANT: reward ad no longer available!
 - all others functions same as in https://github.com/ratson/cordova-plugin-admob-free
 
 Result:

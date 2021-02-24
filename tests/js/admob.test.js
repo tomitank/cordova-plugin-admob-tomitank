@@ -100,30 +100,6 @@ describe('Interstitial', () => {
   })
 })
 
-describe('Reward Video', () => {
-  it('prepare() call correct native method', () => {
-    admob.rewardvideo.prepare(options, success, error)
-    expect(mockFn).toBeCalledWith(
-      expect.any(Function),
-      expect.any(Function),
-      'AdMob',
-      'createRewardVideo',
-      [options],
-    )
-  })
-
-  it('show() call correct native method', () => {
-    admob.rewardvideo.show(success, error)
-    expect(mockFn).toBeCalledWith(
-      expect.any(Function),
-      expect.any(Function),
-      'AdMob',
-      'showRewardVideo',
-      [true],
-    )
-  })
-})
-
 describe('Old APIs', () => {
   it('createBannerView() should work', () => {
     admob.createBannerView(options, success, error)
