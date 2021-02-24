@@ -414,31 +414,10 @@
     }
 
     [self __cycleInterstitial];
-    [self.interstitialView loadRequest:[self __buildAdRequest]];
 
     NSString *callbackString = self.interstitialAdId;
 
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:callbackString];
-    [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
-}
-
-- (void) createInterstitialView:(CDVInvokedUrlCommand *)command {
-    NSLog(@"createInterstitialView");
-
-    CDVPluginResult *pluginResult;
-    NSString *callbackId = command.callbackId;
-    NSArray* args = command.arguments;
-
-    NSUInteger argc = [args count];
-    if (argc >= 1) {
-        NSDictionary* options = [command argumentAtIndex:0 withDefault:[NSNull null]];
-        [self __setOptions:options];
-        autoShowInterstitial = autoShow;
-    }
-
-    [self __cycleInterstitial];
-
-    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
 }
 
@@ -448,15 +427,11 @@
     CDVPluginResult *pluginResult;
     NSString *callbackId = command.callbackId;
 
-    if(!self.interstitialView) {
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"interstitialAd is null, call createInterstitialView first."];
+    BOOL showed = [self __showInterstitial:YES];
+    if (showed) {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     } else {
-        BOOL showed = [self __showInterstitial:YES];
-        if (showed) {
-            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-        } else {
-            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"interstitial not ready yet."];
-        }
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"interstitial not ready yet."];
     }
 
     [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
@@ -468,35 +443,12 @@
     CDVPluginResult *pluginResult;
     NSString *callbackId = command.callbackId;
 
-    if (self.interstitialView && self.interstitialView.isReady) {
+    if (self.interstitialView && [self canPresentFromRootViewController]) {
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:true];
     } else {
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:false];
     }
 
-    [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
-}
-
-- (void) requestInterstitialAd:(CDVInvokedUrlCommand *)command {
-    NSLog(@"requestInterstitialAd");
-
-    CDVPluginResult *pluginResult;
-    NSString *callbackId = command.callbackId;
-    NSArray* args = command.arguments;
-
-    NSUInteger argc = [args count];
-    if (argc >= 1) {
-        NSDictionary* options = [command argumentAtIndex:0 withDefault:[NSNull null]];
-        [self __setOptions:options];
-    }
-
-    if(!self.interstitialView) {
-        [self __cycleInterstitial];
-    } else {
-        [self.interstitialView loadRequest:[self __buildAdRequest]];
-    }
-
-    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
 }
 
@@ -509,15 +461,15 @@
 
     // Clean up the old interstitial...
     if (self.interstitialView) {
-        self.interstitialView.delegate = nil;
+        self.interstitialView.fullScreenContentDelegate = nil;
         self.interstitialView = nil;
     }
 
-    // and create a new interstitial. We set the delegate so that we can be notified of when
+    // and create a new interstitial. We set the delegate so that we can be notified..
     if (!self.interstitialView) {
-        self.interstitialView = [[GADInterstitialAd alloc] initWithAdUnitID:self.interstitialAdId];
-        self.interstitialView.delegate = self;
         [self.interstitialView loadRequest:[self __buildAdRequest]];
+        self.interstitialView = [[GADInterstitialAd alloc] initWithAdUnitID:self.interstitialAdId];
+        self.interstitialView.fullScreenContentDelegate = self;
     }
 }
 
@@ -528,7 +480,7 @@
         [self __cycleInterstitial];
     }
 
-    if (self.interstitialView && canPresentFromRootViewController) {
+    if (self.interstitialView && [self canPresentFromRootViewController]) {
         [self.interstitialView presentFromRootViewController:self.viewController];
         return true;
     } else {
@@ -536,10 +488,6 @@
         return false;
     }
 }
-
-- (BOOL) canPresentFromRootViewController:
-            (nonnull UIViewController *)rootViewController
-                                   error:(NSError *_Nullable *_Nullable)error;
 
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 // Cordova events
@@ -559,6 +507,12 @@
 
 #pragma mark GADBannerViewDelegate implementation
 
+- (void) bannerView:(GADBannerView *)view didFailToReceiveAdWithError:(NSError *)error {
+    NSString* jsonData = [NSString stringWithFormat:@"{ 'error': '%@', 'adType':'banner' }", [error localizedFailureReason]];
+    [self fireEvent:@"" event:@"admob.banner.events.LOAD_FAIL" withData:jsonData];
+    [self fireEvent:@"" event:@"onFailedToReceiveAd" withData:jsonData];
+}
+
 - (void) bannerViewDidReceiveAd:(GADBannerView *)bannerView {
     if(self.bannerShow) {
         [self __showAd:YES];
@@ -567,23 +521,12 @@
     [self fireEvent:@"" event:@"admob.banner.events.LOAD" withData:jsonData];
     [self fireEvent:@"" event:@"onReceiveAd" withData:nil];
 }
-
-- (void) bannerView:(GADBannerView *)view didFailToReceiveAdWithError:(NSError *)error {
-    NSString* jsonData = [NSString stringWithFormat:@"{ 'error': '%@', 'adType':'banner' }", [error localizedFailureReason]];
-    [self fireEvent:@"" event:@"admob.banner.events.LOAD_FAIL" withData:jsonData];
-    [self fireEvent:@"" event:@"onFailedToReceiveAd" withData:jsonData];
-}
-
+/* NOT USED!
 - (void) bannerViewWillDismissScreen:(GADBannerView *)bannerView {
-    [self fireEvent:@"" event:@"admob.banner.events.FULL_SCREEN_WILL_EXIT" withData:nil];
+    [self fireEvent:@"" event:@"admob.banner.events.EXIT_APP" withData:nil];
     [self fireEvent:@"" event:@"onLeaveToAd" withData:nil];
 }
-
-- (void) bannerViewDidDismissScreen:(GADBannerView *)bannerView {
-    [self fireEvent:@"" event:@"admob.banner.events.FULL_SCREEN_DID_EXIT" withData:nil];
-    [self fireEvent:@"" event:@"onLeaveToAd" withData:nil];
-}
-
+*/
 - (void) bannerViewWillPresentScreen:(GADBannerView *)bannerView {
     [self fireEvent:@"" event:@"admob.banner.events.OPEN" withData:nil];
     [self fireEvent:@"" event:@"onPresentAd" withData:nil];
@@ -594,10 +537,9 @@
     [self fireEvent:@"" event:@"onDismissAd" withData:nil];
 }
 
-#pragma mark GADInterstitialAdLoadCompletionHandler implementation
+#pragma mark GADFullScreenContentDelegate implementation
 
-- (void) interstitial:(GADInterstitialAd *)ad
-    didFailToReceiveAdWithError:(NSError *)error {
+- (void) interstitial:(GADInterstitialAd *)ad didFailToReceiveAdWithError:(NSError *)error {
     NSString* jsonData = [NSString stringWithFormat:@"{ 'error': '%@', 'adType':'interstitial' }", [error localizedFailureReason]];
     [self fireEvent:@"" event:@"admob.interstitial.events.LOAD_FAIL" withData:jsonData];
     [self fireEvent:@"" event:@"onFailedToReceiveAd" withData:jsonData];
@@ -622,7 +564,7 @@
     [self fireEvent:@"" event:@"admob.interstitial.events.CLOSE" withData:nil];
     [self fireEvent:@"" event:@"onDismissInterstitialAd" withData:nil];
     if (self.interstitialView) {
-        self.interstitialView.delegate = nil;
+        self.interstitialView.fullScreenContentDelegate = nil;
         self.interstitialView = nil;
         [self resizeViews];
     }
@@ -933,11 +875,11 @@
     self.bannerView = nil;
     self.interstitialView = nil;
 
+    bannerView_.delegate = nil;
+    interstitialView_.fullScreenContentDelegate = nil;
+
     bannerView_ = nil;
     interstitialView_ = nil;
-
-    bannerView_.delegate = nil;
-    interstitialView_.delegate = nil;
 }
 
 @end

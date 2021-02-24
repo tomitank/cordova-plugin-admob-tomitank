@@ -1,6 +1,6 @@
 import exec from 'cordova/exec'
 
-import { wrapCallbacks, translateOptions } from './utils'
+import { translateOptions } from './utils'
 
 import { Banner } from './banner'
 import { Interstitial } from './interstitial'
@@ -12,7 +12,6 @@ import { Interstitial } from './interstitial'
  * @emits {admob.banner.events.LOAD_FAIL}
  * @emits {admob.banner.events.OPEN}
  * @emits {admob.banner.events.CLOSE}
- * @emits {admob.banner.events.EXIT_APP}
  * @example
  * admob.banner.config({
  *  id: 'ca-app-pub-xxx/xxx',
@@ -39,7 +38,6 @@ export const banner = new Banner()
  * @emits {admob.interstitial.events.LOAD_FAIL}
  * @emits {admob.interstitial.events.OPEN}
  * @emits {admob.interstitial.events.CLOSE}
- * @emits {admob.interstitial.events.EXIT_APP}
  * @example
  * admob.interstitial.config({
  *  id: 'ca-app-pub-xxx/xxx',
@@ -48,6 +46,8 @@ export const banner = new Banner()
  * admob.interstitial.prepare()
  *
  * admob.interstitial.show()
+ *
+ * admob.interstitial.ready()
  */
 export const interstitial = new Interstitial()
 
@@ -125,7 +125,6 @@ export function setOptions(options, successCallback, failureCallback) {
  */
 export const AD_SIZE = Banner.sizes
 
-/* eslint-disable no-console */
 /**
  * @deprecated since version 3.1
  */
@@ -152,100 +151,3 @@ export function trackingStatusForm() {
     exec(resolve, reject, 'AdMob', 'trackingStatusForm', [])
   })
 }
-
-/**
- * @deprecated since version 0.6
- */
-export function createBannerView(
-  options = {},
-  successCallback,
-  failureCallback,
-) {
-  console.warn('Use admob.banner.prepare() instead.')
-  exec(successCallback, failureCallback, 'AdMob', 'createBannerView', [
-    translateOptions(options),
-  ])
-}
-
-/**
- * @deprecated since version 0.6
- */
-export function destroyBannerView(options, successCallback, failureCallback) {
-  console.warn('Use admob.banner.remove() instead.')
-  exec(successCallback, failureCallback, 'AdMob', 'destroyBannerView', [])
-}
-
-/**
- * @deprecated since version 0.6
- */
-export function showAd(show = true, successCallback, failureCallback) {
-  console.warn('Use admob.banner.show() and admob.banner.hide() instead.')
-  exec(successCallback, failureCallback, 'AdMob', 'showAd', [show])
-}
-
-/**
- * @deprecated since version 0.6
- */
-export function createInterstitialView(
-  options,
-  successCallback,
-  failureCallback,
-) {
-  console.warn(
-    'Use admob.interstitial.prepare() instead, it will do both createInterstitialView() and requestInterstitialAd().',
-  )
-  exec(successCallback, failureCallback, 'AdMob', 'createInterstitialView', [
-    translateOptions(options),
-  ])
-}
-
-/**
- * @deprecated since version 0.6
- */
-export function requestInterstitialAd(
-  options = {},
-  successCallback,
-  failureCallback,
-) {
-  console.warn(
-    'Use admob.interstitial.prepare() instead, it will do both createInterstitialView() and requestInterstitialAd().',
-  )
-  exec(successCallback, failureCallback, 'AdMob', 'requestInterstitialAd', [
-    translateOptions(options),
-  ])
-}
-
-/**
- * @deprecated since version 0.6
- */
-export function prepareInterstitial(
-  options = {},
-  successCallback,
-  failureCallback,
-) {
-  console.warn('Use admob.interstitial.prepare() instead.')
-  exec(successCallback, failureCallback, 'AdMob', 'prepareInterstitial', [
-    translateOptions(options),
-  ])
-}
-
-/**
- * @deprecated since version 0.6
- */
-export function showInterstitial(successCallback, failureCallback) {
-  console.warn('Use admob.interstitial.show() instead.')
-  wrapCallbacks(interstitial.show(), successCallback, failureCallback)
-}
-
-/**
- * @deprecated since version 0.6
- */
-export function showInterstitialAd(
-  show = true,
-  successCallback,
-  failureCallback,
-) {
-  console.warn('Use admob.interstitial.show() instead.')
-  exec(successCallback, failureCallback, 'AdMob', 'showInterstitialAd', [show])
-}
-/* eslint-enable no-console */

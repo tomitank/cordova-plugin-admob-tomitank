@@ -17,7 +17,6 @@ const events = buildEvents('banner', [
   'LOAD_FAIL',
   'OPEN',
   'CLOSE',
-  'EXIT_APP',
 ])
 
 /**
