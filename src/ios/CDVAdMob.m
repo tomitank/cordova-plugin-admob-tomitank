@@ -446,7 +446,7 @@
     CDVPluginResult *pluginResult;
     NSString *callbackId = command.callbackId;
 
-    if (self.interstitialView && [self.interstitialView canPresentFromRootViewController]) {
+    if (self.interstitialView && [self.interstitialView canPresentFromRootViewController:self error:nil]) {
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:true];
     } else {
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:false];
@@ -485,7 +485,7 @@
         [self __cycleInterstitial];
     }
 
-    if (self.interstitialView && [self.interstitialView canPresentFromRootViewController]) {
+    if (self.interstitialView && [self.interstitialView canPresentFromRootViewController:self error:nil]) {
         [self.interstitialView presentFromRootViewController:self.viewController];
         return true;
     } else {
@@ -584,10 +584,7 @@
 
     if (self.isTesting) {
         NSString* deviceId = [self __getAdMobDeviceId];
-        GADRequestConfiguration.testDeviceIdentifiers = @[deviceId lowercaseString];
-
-       // [GADRequestConfiguration testDeviceIdentifiers: @[deviceId lowercaseString]];
-      //  request.testDevices = @[ kGADSimulatorID, deviceId, [deviceId lowercaseString] ];
+        GADMobileAds.sharedInstance.requestConfiguration.testDeviceIdentifiers = @[[deviceId lowercaseString]];
         NSLog(@"testDeviceIdentifiers: %@", deviceId);
     }
 
@@ -603,9 +600,9 @@
 
     if (self.forChild != nil) {
         if ([self.forChild caseInsensitiveCompare:@"yes"] == NSOrderedSame) {
-            [GADRequestConfiguration tagForUnderAgeOfConsent:YES];
+            [GADMobileAds.sharedInstance.requestConfiguration tagForUnderAgeOfConsent:YES];
         } else if ([self.forChild caseInsensitiveCompare:@"no"] == NSOrderedSame) {
-            [GADRequestConfiguration tagForUnderAgeOfConsent:NO];
+            [GADMobileAds.sharedInstance.requestConfiguration tagForUnderAgeOfConsent:YES];
         }
     }
     return request;
