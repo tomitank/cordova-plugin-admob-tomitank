@@ -471,10 +471,12 @@
     // and create a new interstitial. We set the delegate so that we can be notified..
     [GADInterstitialAd loadWithAdUnitID:self.interstitialAdId request:[self __buildAdRequest] completionHandler:^(GADInterstitialAd *ad, NSError *error) {
         if (error) {
-            NSLog(@"Failed to load interstitial ad with error: %@", [error localizedDescription]);
+            [self __interstitialNotLoaded:error]; // ERROR event
+        } else {
+            self.interstitialView = ad;
+            self.interstitialView.fullScreenContentDelegate = self;
+            [self __interstitialLoaded]; // LOAD event
         }
-        self.interstitialView = ad;
-        self.interstitialView.fullScreenContentDelegate = self;
     }];
 }
 
@@ -544,13 +546,18 @@
 
 #pragma mark GADFullScreenContentDelegate implementation
 
-- (void) interstitial:(GADInterstitialAd *)ad didFailToReceiveAdWithError:(NSError *)error {
+- (void) ad:(id)interstitial didFailToPresentFullScreenContentWithError:(NSError *)error {
+    [self __interstitialNotLoaded:error]; // ERROR event
+}
+
+- (void) __interstitialNotLoaded:(NSError *)error {
+    NSLog(@"Failed to [load or present] interstitial ad with error: %@", [error localizedDescription]);
     NSString* jsonData = [NSString stringWithFormat:@"{ 'error': '%@', 'adType':'interstitial' }", [error localizedFailureReason]];
     [self fireEvent:@"" event:@"admob.interstitial.events.LOAD_FAIL" withData:jsonData];
     [self fireEvent:@"" event:@"onFailedToReceiveAd" withData:jsonData];
 }
 
-- (void) interstitialDidReceiveAd:(GADInterstitialAd *)interstitial {
+- (void) __interstitialLoaded { // was interstitialDidReceiveAd before SDK 8
     [self fireEvent:@"" event:@"admob.interstitial.events.LOAD" withData:nil];
     [self fireEvent:@"" event:@"onReceiveInterstitialAd" withData:nil];
     if (self.interstitialView) {
@@ -560,12 +567,12 @@
     }
 }
 
-- (void) interstitialWillPresentScreen:(GADInterstitialAd *)interstitial {
+- (void) adDidPresentFullScreenContent:(id)interstitial {
     [self fireEvent:@"" event:@"admob.interstitial.events.OPEN" withData:nil];
     [self fireEvent:@"" event:@"onPresentInterstitialAd" withData:nil];
 }
 
-- (void) interstitialDidDismissScreen:(GADInterstitialAd *)interstitial {
+- (void) adDidDismissFullScreenContent:(id)interstitial {
     [self fireEvent:@"" event:@"admob.interstitial.events.CLOSE" withData:nil];
     [self fireEvent:@"" event:@"onDismissInterstitialAd" withData:nil];
     if (self.interstitialView) {
