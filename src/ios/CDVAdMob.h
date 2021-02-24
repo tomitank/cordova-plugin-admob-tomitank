@@ -8,6 +8,7 @@
 #import <GoogleMobileAds/GADBannerView.h>
 #import <GoogleMobileAds/GADInterstitialAd.h>
 #import <GoogleMobileAds/GADBannerViewDelegate.h>
+#import <GoogleMobileAds/GADRequestConfiguration.h>
 #import <GoogleMobileAds/GADFullScreenContentDelegate.h>
 #import <AppTrackingTransparency/AppTrackingTransparency.h>
 #import <UserMessagingPlatform/UserMessagingPlatform.h>

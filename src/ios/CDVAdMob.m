@@ -584,8 +584,11 @@
 
     if (self.isTesting) {
         NSString* deviceId = [self __getAdMobDeviceId];
-        request.testDevices = @[ kGADSimulatorID, deviceId, [deviceId lowercaseString] ];
-        NSLog(@"request.testDevices: %@", deviceId);
+        GADRequestConfiguration.testDeviceIdentifiers = @[deviceId lowercaseString];
+
+       // [GADRequestConfiguration testDeviceIdentifiers: @[deviceId lowercaseString]];
+      //  request.testDevices = @[ kGADSimulatorID, deviceId, [deviceId lowercaseString] ];
+        NSLog(@"testDeviceIdentifiers: %@", deviceId);
     }
 
     if (self.adExtras) {
@@ -600,9 +603,9 @@
 
     if (self.forChild != nil) {
         if ([self.forChild caseInsensitiveCompare:@"yes"] == NSOrderedSame) {
-            [request tagForChildDirectedTreatment:YES];
+            [GADRequestConfiguration tagForUnderAgeOfConsent:YES];
         } else if ([self.forChild caseInsensitiveCompare:@"no"] == NSOrderedSame) {
-            [request tagForChildDirectedTreatment:NO];
+            [GADRequestConfiguration tagForUnderAgeOfConsent:NO];
         }
     }
     return request;
