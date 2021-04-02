@@ -63,6 +63,9 @@ for iOS you need to add the following to config.xml:
         </dict>
     </array>
 </config-file>
+<config-file platform="ios" target="*-Info.plist" parent="NSUserTrackingUsageDescription">
+    <string>This lets us show your personalized ads, which keeps the app for free</string>
+</config-file>
 ```
 
 Difference against the admob-free plugin:
