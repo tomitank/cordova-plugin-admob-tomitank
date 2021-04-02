@@ -52,6 +52,19 @@ admob.userMessagingPlatform().then(function(result) {
 });
 ```
 
+iOS you need to add the following to config.xml:
+-------------------------------------------------------
+```
+<config-file platform="ios" target="*-Info.plist" parent="SKAdNetworkItems">
+      <array>
+        <dict>
+            <key>SKAdNetworkIdentifier</key>
+            <string>cstr6suwn9.skadnetwork</string>
+        </dict>
+    </array>
+</config-file>
+```
+
 Difference against the admob-free plugin:
 -------------------------------------------------------
 All prepare() functions return the ad id!
