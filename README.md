@@ -52,7 +52,7 @@ admob.userMessagingPlatform().then(function(result) {
 });
 ```
 
-iOS you need to add the following to config.xml:
+for iOS you need to add the following to config.xml:
 -------------------------------------------------------
 ```
 <config-file platform="ios" target="*-Info.plist" parent="SKAdNetworkItems">
