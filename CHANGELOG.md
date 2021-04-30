@@ -1,5 +1,14 @@
 # Releases
 
+## 4.1.1 (2021-04-30)
+
+* Update iOS SDK to 8.4.0
+
+## 4.1.0 (2021-02-24)
+
+* rewrite iOS code for iOS SDK 8
+* reward ad no longer available!
+
 ## 3.1.0 (2020-09-23)
 
 * revisited code especial the iOS
