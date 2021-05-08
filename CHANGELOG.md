@@ -1,5 +1,10 @@
 # Releases
 
+## 4.1.2 (2021-05-08)
+
+* Update iOS SDK to 8.5.0
+* Revisited iOS code
+
 ## 4.1.1 (2021-04-30)
 
 * Update iOS SDK to 8.4.0

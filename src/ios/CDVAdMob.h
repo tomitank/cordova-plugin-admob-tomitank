@@ -63,8 +63,7 @@
 - (void) requestAd:(CDVInvokedUrlCommand *)command;
 - (void) showAd:(CDVInvokedUrlCommand *)command;
 
-- (void) createInterstitialView:(CDVInvokedUrlCommand *)command;
-- (void) requestInterstitialAd:(CDVInvokedUrlCommand *)command;
+- (void) prepareInterstitial:(CDVInvokedUrlCommand *)command;
 - (void) showInterstitialAd:(CDVInvokedUrlCommand *)command;
 - (void) isInterstitialReady:(CDVInvokedUrlCommand *)command;
 
